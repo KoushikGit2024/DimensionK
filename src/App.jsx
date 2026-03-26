@@ -7,10 +7,10 @@ import ChaoticSystemComponent from './components/backgrounds/ChaoticSystemBackgr
 const App = () => {
   return (
     <div>
-      {/* <Pulsar/> */}
+      <Pulsar/>
       {/* <SolarSystem/> */}
       {/* <Galaxy/> */}
-      <ChaoticSystemComponent/>
+      {/* <ChaoticSystemComponent/> */}
     </div>
   )
 }
