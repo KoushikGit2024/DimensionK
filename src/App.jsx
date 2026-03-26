@@ -1,18 +1,19 @@
-import React from 'react'
-import Pulsar from './components/Pulsar'
-import SolarSystem from './components/SolarSystem'
-import Galaxy from './components/Galaxy'
-import ChaoticSystemComponent from './components/backgrounds/ChaoticSystemBackground'
+import React from 'react';
+import SpaceBG from './components/SpaceBG';
+import HeroSection from './components/HeroSection';
 
 const App = () => {
   return (
-    <div>
-      <Pulsar/>
-      {/* <SolarSystem/> */}
-      {/* <Galaxy/> */}
-      {/* <ChaoticSystemComponent/> */}
-    </div>
-  )
-}
+    <div className="relative w-full min-h-screen text-white">
+      
+      {/* Layer 0: The Deep Space & WebGL Stars (zIndex: -2) */}
+      <SpaceBG />
+      
+      {/* Layer 1: The Orb & Glassmorphism UI (zIndex: 0 and 10) */}
+      <HeroSection />
 
-export default App
+    </div>
+  );
+};
+
+export default App;
