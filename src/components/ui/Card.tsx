@@ -1,26 +1,52 @@
-import React from "react";
+"use client";
+
+import React, { useRef, useState } from "react";
 
 interface CardProps extends React.HTMLAttributes<HTMLDivElement> {
-  hoverEffect?: boolean;
+  spotlight?: boolean;
 }
 
 export const Card: React.FC<CardProps> = ({
   className = "",
-  hoverEffect = true,
+  spotlight = true,
   children,
   ...props
 }) => {
+  const divRef = useRef<HTMLDivElement>(null);
+  const [position, setPosition] = useState({ x: 0, y: 0 });
+  const [opacity, setOpacity] = useState(0);
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (!divRef.current || !spotlight) return;
+    const rect = divRef.current.getBoundingClientRect();
+    setPosition({ x: e.clientX - rect.left, y: e.clientY - rect.top });
+  };
+
+  const handleMouseEnter = () => setOpacity(1);
+  const handleMouseLeave = () => setOpacity(0);
+
   return (
     <div
-      className={`relative bg-surface/90 border border-border p-6 rounded-sm transition-all duration-300 ${
-        hoverEffect
-          ? "hover:border-border-strong hover:bg-surface-raised/90 hover:shadow-lg hover:shadow-void/50"
-          : ""
-      } ${className}`}
+      ref={divRef}
+      onMouseMove={handleMouseMove}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
+      className={`relative overflow-hidden rounded-xl border border-white/[0.07] bg-surface-glass backdrop-blur-md p-6 sm:p-8 transition-colors duration-300 hover:border-white/[0.16] ${className}`}
       {...props}
     >
-      {children}
+      {/* Dynamic Cursor Spotlight Border Glow */}
+      {spotlight && (
+        <div
+          className="pointer-events-none absolute -inset-px rounded-xl opacity-0 transition-opacity duration-300"
+          style={{
+            opacity,
+            background: `radial-gradient(400px circle at ${position.x}px ${position.y}px, rgba(0, 255, 238, 0.12), transparent 40%)`,
+          }}
+        />
+      )}
+
+      {/* Card Content Layer */}
+      <div className="relative z-10">{children}</div>
     </div>
   );
 };
-

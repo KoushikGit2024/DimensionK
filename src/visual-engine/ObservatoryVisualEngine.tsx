@@ -10,7 +10,7 @@ const DynamicCanvas = dynamic(
       return function CanvasWrapper({ children }: { children: React.ReactNode }) {
         return (
           <Canvas
-            camera={{ position: [0, 0, 7.5], fov: 42 }}
+            camera={{ position: [0, 0, 9.5], fov: 46 }}
             dpr={[1, 2]}
             gl={{ antialias: true, alpha: true }}
           >
@@ -22,43 +22,52 @@ const DynamicCanvas = dynamic(
   { ssr: false }
 );
 
-import { CelestialSphere } from "./CelestialSphere";
+import { GalacticCore } from "./GalacticCore";
 import { Starfield } from "./Starfield";
 
 export const ObservatoryVisualEngine: React.FC = () => {
-  const [isMobile, setIsMobile] = useState<boolean | null>(null);
+  const [deviceTier, setDeviceTier] = useState<"desktop" | "mobile" | null>(null);
+  const [mouseOffset, setMouseOffset] = useState({ x: 0, y: 0 });
 
   useEffect(() => {
-    const checkMobile = () => {
+    const evaluateDevice = () => {
       const isTouch = window.matchMedia("(pointer: coarse)").matches;
-      const isNarrow = window.innerWidth < 1024;
-      setIsMobile(isTouch || isNarrow);
+      const isNarrow = window.innerWidth < 768;
+      setDeviceTier(isTouch || isNarrow ? "mobile" : "desktop");
     };
 
-    checkMobile();
-    window.addEventListener("resize", checkMobile, { passive: true });
-    return () => window.removeEventListener("resize", checkMobile);
+    evaluateDevice();
+    window.addEventListener("resize", evaluateDevice, { passive: true });
+
+    const handleMouseMove = (e: MouseEvent) => {
+      const x = (e.clientX / window.innerWidth - 0.5) * 0.8;
+      const y = (e.clientY / window.innerHeight - 0.5) * 0.8;
+      setMouseOffset({ x, y });
+    };
+
+    window.addEventListener("mousemove", handleMouseMove, { passive: true });
+
+    return () => {
+      window.removeEventListener("resize", evaluateDevice);
+      window.removeEventListener("mousemove", handleMouseMove);
+    };
   }, []);
 
-  if (isMobile === null) return null;
-
-  if (isMobile) {
-    return (
-      <div className="absolute inset-0 pointer-events-none select-none opacity-30">
-        <div className="absolute right-4 top-1/4 w-60 h-60 rounded-full border border-border border-dashed animate-[spin_120s_linear_infinite]" />
-        <div className="absolute right-10 top-1/3 w-48 h-48 rounded-full border border-accent/20" />
-      </div>
-    );
-  }
+  if (deviceTier === null) return null;
 
   return (
-    <div className="absolute inset-0 pointer-events-none select-none z-0">
+    <div className="absolute inset-0 pointer-events-none select-none z-0 overflow-hidden">
       <DynamicCanvas>
-        <ambientLight intensity={0.6} />
-        <Starfield count={280} />
-        {/* Aligned directly with the right-hand focal zone of the mockup */}
-        <group position={[2.8, 0, 0]}>
-          <CelestialSphere />
+        <ambientLight intensity={0.4} />
+        {/* Living Deep-Space Starfield */}
+        <Starfield count={deviceTier === "mobile" ? 600 : 1800} />
+
+        {/* The Luminous Galactic Core */}
+        <group
+          position={[deviceTier === "mobile" ? 0 : 3.4 + mouseOffset.x * 0.5, -mouseOffset.y * 0.5, 0]}
+          scale={deviceTier === "mobile" ? [0.65, 0.65, 0.65] : [1, 1, 1]}
+        >
+          <GalacticCore />
         </group>
       </DynamicCanvas>
     </div>

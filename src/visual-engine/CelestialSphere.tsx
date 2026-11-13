@@ -9,6 +9,7 @@ export const CelestialSphere: React.FC = () => {
   const satellite1Ref = useRef<THREE.Mesh>(null);
   const satellite2Ref = useRef<THREE.Mesh>(null);
   const satellite3Ref = useRef<THREE.Mesh>(null);
+  const accumulatedTimeRef = useRef(0);
 
   // Generate Latitude Rings (Horizontals)
   const latitudeLines = useMemo(() => {
@@ -35,11 +36,11 @@ export const CelestialSphere: React.FC = () => {
     return lines;
   }, []);
 
-  useFrame((state, delta) => {
-    const t = state.clock.elapsedTime;
+  useFrame((_, delta) => {
+    accumulatedTimeRef.current += delta;
+    const t = accumulatedTimeRef.current;
 
     if (groupRef.current) {
-      // Gentle axial rotation
       groupRef.current.rotation.y += delta * 0.12;
       groupRef.current.rotation.x = Math.sin(t * 0.15) * 0.08;
     }
@@ -71,7 +72,7 @@ export const CelestialSphere: React.FC = () => {
 
   return (
     <group ref={groupRef}>
-      {/* Central Dense Core Mesh (as seen in the mockup's center) */}
+      {/* Central Dense Core Mesh */}
       <mesh>
         <sphereGeometry args={[0.9, 32, 32]} />
         <meshBasicMaterial

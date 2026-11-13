@@ -24,8 +24,8 @@ export default function Home() {
       {/* Desktop Custom Observatory Reticle Cursor */}
       <ObservatoryCursor />
 
-      {/* Header matching mockup */}
-      <SiteHeader coordinates={profile.coordinates} />
+      {/* DimensionK Brand & Functional Telemetry Header */}
+      <SiteHeader />
 
       <main className="flex-1">
         <HeroSection profile={profile} />
