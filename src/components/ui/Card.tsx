@@ -8,7 +8,7 @@ interface CardProps extends React.HTMLAttributes<HTMLDivElement> {
 
 export const Card: React.FC<CardProps> = ({
   className = "",
-  spotlight = true,
+  spotlight = false,
   children,
   ...props
 }) => {
@@ -41,7 +41,7 @@ export const Card: React.FC<CardProps> = ({
       onMouseMove={handleMouseMove}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
-      className={`relative overflow-hidden rounded-lg border border-white/[0.08] bg-surface-glass backdrop-blur-md p-6 sm:p-7 transition-colors duration-300 hover:border-white/[0.18] ${className}`}
+      className={`relative overflow-hidden rounded-lg border border-white/[0.08] bg-surface/70 p-6 sm:p-7 transition-colors duration-300 hover:border-white/[0.18] ${className}`}
       {...props}
     >
       {spotlight && (
@@ -51,7 +51,8 @@ export const Card: React.FC<CardProps> = ({
           className="pointer-events-none absolute -inset-px rounded-lg opacity-0 transition-opacity duration-300"
         />
       )}
-      <div className="relative z-10 h-full flex flex-col">{children}</div>
+
+      <div className="relative z-10">{children}</div>
     </div>
   );
 };

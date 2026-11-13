@@ -3,7 +3,8 @@
 import React, { useState } from "react";
 import { Container } from "@/components/layout/Container";
 import { SectionHeading } from "@/components/ui/SectionHeading";
-import { Button } from "@/components/ui/Button";
+import { Button, buttonStyles } from "@/components/ui/Button";
+import { Magnetic } from "@/components/ui/Magnetic";
 import { Card } from "@/components/ui/Card";
 import { ExternalLink } from "@/schemas/content";
 import { Copy, Check, Mail, ArrowUpRight, Send, Radio } from "lucide-react";
@@ -72,10 +73,9 @@ export const ContactSection: React.FC<ContactSectionProps> = ({
                     <Radio className="w-3.5 h-3.5 animate-pulse" />
                     <span>Primary Direct Channel</span>
                   </span>
-                  <span className="text-text-dim">SIGNAL: ACTIVE</span>
                 </div>
 
-                <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4 p-4 bg-void border border-white/[0.1] rounded-xs">
+                <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4 p-4 bg-surface/60 border border-white/[0.1] rounded-xs">
                   <div className="flex items-center gap-3 min-w-0">
                     <Mail className="w-5 h-5 text-accent shrink-0" />
                     <span className="font-mono text-sm sm:text-base text-white truncate">
@@ -87,6 +87,7 @@ export const ContactSection: React.FC<ContactSectionProps> = ({
                       type="button"
                       variant="telemetry"
                       size="sm"
+                      data-cursor="Copy"
                       onClick={handleCopy}
                       aria-label="Copy email address to clipboard"
                     >
@@ -146,55 +147,54 @@ export const ContactSection: React.FC<ContactSectionProps> = ({
                 <span className="font-mono text-xs text-text-dim truncate max-w-xs sm:max-w-md">
                   HEADER: {selectedTopic.subject}
                 </span>
-                <a href={mailtoHref}>
-                  <Button variant="primary" size="md">
+                <Magnetic>
+                  <a
+                    href={mailtoHref}
+                    className={buttonStyles("primary", "md")}
+                  >
                     <Send className="w-3.5 h-3.5 text-accent" />
                     <span>Launch Mail Client</span>
-                  </Button>
-                </a>
+                  </a>
+                </Magnetic>
               </div>
             </Card>
           </div>
 
           {/* Right External Registry Links */}
           <div className="lg:col-span-5">
-            <Card className="h-full justify-between space-y-6">
-              <div className="space-y-4">
-                <div className="border-b border-white/[0.07] pb-3 font-mono text-xs text-text-muted uppercase tracking-wider">
-                  // External Verification Registries
-                </div>
-                <p className="text-xs sm:text-sm text-text-secondary leading-relaxed">
-                  Inspect open-source repositories, commit histories, architectural
-                  documentation, and professional credentials across verified
-                  networks.
-                </p>
-
-                <div className="space-y-3 pt-1">
-                  {links.map((link) => (
-                    <a
-                      key={link.label}
-                      href={link.href}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex items-center justify-between p-4 rounded-xs bg-void border border-white/[0.08] hover:border-accent group transition-colors"
-                    >
-                      <div className="space-y-0.5">
-                        <div className="font-mono text-sm text-white group-hover:text-accent transition-colors font-medium">
-                          {link.label}
-                        </div>
-                        <div className="font-mono text-[11px] text-text-dim uppercase">
-                          {link.kind} // {link.href.replace("https://", "")}
-                        </div>
-                      </div>
-                      <ArrowUpRight className="w-4 h-4 text-text-muted group-hover:text-accent transition-colors" />
-                    </a>
-                  ))}
-                </div>
+            <Card className="h-full space-y-6">
+              <div className="space-y-1 pb-3 border-b border-white/[0.07]">
+                <span className="font-mono text-xs uppercase tracking-wider text-text-muted">
+                  External Network Registries
+                </span>
+                <h3 className="text-xl font-normal text-text">
+                  Direct Profile Destinations
+                </h3>
               </div>
 
-              <div className="pt-4 border-t border-white/[0.07] font-mono text-[11px] text-text-dim flex items-center justify-between">
-                <span>BASE: SERAMPORE / AGARTALA, IN</span>
-                <span className="text-accent">UTC+05:30 IST</span>
+              <p className="text-sm text-text-secondary leading-relaxed">
+                Connect for technical discussions, code inspection, open-source
+                contributions, and verified academic milestones.
+              </p>
+
+              <div className="space-y-3 pt-2">
+                {links.map((link) => (
+                  <a
+                    key={link.label}
+                    href={link.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center justify-between p-3.5 rounded-xs border border-white/[0.08] bg-white/[0.02] hover:border-accent hover:bg-white/[0.04] transition-all group font-mono text-xs text-text-secondary hover:text-white"
+                  >
+                    <div className="flex items-center gap-2.5">
+                      <span className="w-1.5 h-1.5 rounded-full bg-accent" />
+                      <span className="uppercase tracking-wider">
+                        {link.label}
+                      </span>
+                    </div>
+                    <ArrowUpRight className="w-4 h-4 text-text-dim group-hover:text-accent group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all" />
+                  </a>
+                ))}
               </div>
             </Card>
           </div>

@@ -70,6 +70,7 @@ export const ProfileSchema = z.object({
   displayName: z.string(),
   headline: z.string(),
   summary: z.string(),
+  statement: z.string().optional(),
   location: z.string(),
   coordinates: z.string(),
   email: z.string().email(),

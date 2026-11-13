@@ -1,6 +1,7 @@
 import React from "react";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Geist, Geist_Mono, Instrument_Serif } from "next/font/google";
 import { generateMetadata } from "./metadata";
+import { PageAtmosphere } from "@/components/visual/PageAtmosphere";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -15,6 +16,14 @@ const geistMono = Geist_Mono({
   display: "swap",
 });
 
+const instrument = Instrument_Serif({
+  variable: "--font-instrument",
+  weight: "400",
+  style: ["normal", "italic"],
+  subsets: ["latin"],
+  display: "swap",
+});
+
 export { generateMetadata };
 
 export default function RootLayout({
@@ -25,7 +34,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      className={`${geistSans.variable} ${geistMono.variable} ${instrument.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col bg-void text-text">
         <a
@@ -34,6 +43,7 @@ export default function RootLayout({
         >
           Skip to main content
         </a>
+        <PageAtmosphere />
         {children}
       </body>
     </html>

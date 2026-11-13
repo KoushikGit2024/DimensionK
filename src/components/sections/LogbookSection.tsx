@@ -15,7 +15,7 @@ export const LogbookSection: React.FC<LogbookSectionProps> = ({ education }) => 
   return (
     <section
       id="logbook"
-      className="py-20 lg:py-28 border-b border-white/[0.08] bg-void"
+      className="py-20 lg:py-28 border-b border-white/[0.08]"
     >
       <Container size="wide">
         <SectionHeading
@@ -23,7 +23,12 @@ export const LogbookSection: React.FC<LogbookSectionProps> = ({ education }) => 
           eyebrow="Chronology & Academic Base"
           title="Education & Engineering Logbook"
           description="Formal academic track providing foundational grounding in computer architecture, digital logic, discrete mathematics, and systems engineering."
-          rightMeta={<TelemetryStamp label="CGPA INDEX" value="8.55 / 10.0" />}
+          rightMeta={
+            <TelemetryStamp
+              label="CGPA INDEX"
+              value={`${education.find((e) => e.cgpa)?.cgpa ?? "8.55"} / 10.0`}
+            />
+          }
         />
 
         <div className="relative pl-4 sm:pl-8 border-l border-white/[0.12] space-y-8 max-w-5xl">

@@ -2,6 +2,7 @@
   "displayName": "Koushik Kar",
   "headline": "Software Engineer & Systems Developer",
   "summary": "Engineering developer tools, AST code intelligence, real-time networking, and scalable full-stack architectures. Undergraduate at NIT Agartala with deep roots in algorithms and systems thinking.",
+  "statement": "I study electronics, but I keep getting pulled toward software, toward the part where a system either holds its invariants or doesn't. I build tools that read code, engines that keep players in sync, and visualizers that make algorithms slow enough to see. I would rather ship something small that is correct than something large that is vague.",
   "location": "Serampore, West Bengal, India",
   "coordinates": "22.75° N, 88.34° E",
   "email": "koushikkar712@gmail.com",
@@ -18,4 +19,3 @@
     }
   ]
 }
-

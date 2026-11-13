@@ -8,7 +8,7 @@ import { Container } from "@/components/layout/Container";
 import { Badge } from "@/components/ui/Badge";
 import { Card } from "@/components/ui/Card";
 import { TelemetryStamp } from "@/components/ui/TelemetryStamp";
-import { Button } from "@/components/ui/Button";
+import { Button, buttonStyles } from "@/components/ui/Button";
 import { ObservatoryCursor } from "@/components/visual/ObservatoryCursor";
 import {
   ArrowLeft,
@@ -87,7 +87,7 @@ async function ProjectContent({ params }: ProjectPageProps) {
           <Badge variant="status" className="uppercase">
             {project.status}
           </Badge>
-          <Badge variant="mono">{project.category.replace("-", " ")}</Badge>
+          <Badge variant="mono">{project.category.replaceAll("-", " ")}</Badge>
         </div>
 
         <div className="space-y-2">
@@ -109,12 +109,11 @@ async function ProjectContent({ params }: ProjectPageProps) {
               href={project.links.github}
               target="_blank"
               rel="noopener noreferrer"
+              className={buttonStyles("primary", "md")}
             >
-              <Button variant="primary" size="md">
-                <GitBranch className="w-4 h-4 text-accent" />
-                <span>Inspect GitHub Repository</span>
-                <ArrowUpRight className="w-3.5 h-3.5 text-text-dim" />
-              </Button>
+              <GitBranch className="w-4 h-4 text-accent" />
+              <span>Inspect GitHub Repository</span>
+              <ArrowUpRight className="w-3.5 h-3.5 text-text-dim" />
             </a>
           )}
           {project.links.demo && (
@@ -122,11 +121,10 @@ async function ProjectContent({ params }: ProjectPageProps) {
               href={project.links.demo}
               target="_blank"
               rel="noopener noreferrer"
+              className={buttonStyles("secondary", "md")}
             >
-              <Button variant="secondary" size="md">
-                <span>Launch Live Deployment</span>
-                <ArrowUpRight className="w-3.5 h-3.5 text-accent" />
-              </Button>
+              <span>Launch Live Deployment</span>
+              <ArrowUpRight className="w-3.5 h-3.5 text-accent" />
             </a>
           )}
         </div>
@@ -199,7 +197,7 @@ async function ProjectContent({ params }: ProjectPageProps) {
             <div className="pt-4 border-t border-white/[0.07] space-y-2.5 font-mono text-xs">
               <div className="flex justify-between">
                 <span className="text-text-dim">CATEGORY</span>
-                <span className="text-text uppercase">{project.category}</span>
+                <span className="text-text uppercase">{project.category.replaceAll("-", " ")}</span>
               </div>
               <div className="flex justify-between">
                 <span className="text-text-dim">STATUS</span>
@@ -267,7 +265,7 @@ export default function ProjectPage({ params }: ProjectPageProps) {
   const profile = getProfile();
 
   return (
-    <div className="relative min-h-screen bg-void flex flex-col selection:bg-accent/20 selection:text-white">
+    <div className="relative min-h-screen flex flex-col selection:bg-accent/20 selection:text-white">
       <ObservatoryCursor />
       <SiteHeader />
 

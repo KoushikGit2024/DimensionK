@@ -15,7 +15,7 @@ export const SiteFooter: React.FC<SiteFooterProps> = ({
   links,
 }) => {
   return (
-    <footer className="border-t border-white/[0.08] bg-void py-12 text-xs font-mono text-text-muted">
+    <footer className="border-t border-white/[0.08] py-12 text-xs font-mono text-text-muted">
       <Container size="wide">
         <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-8">
           <div className="space-y-1.5">

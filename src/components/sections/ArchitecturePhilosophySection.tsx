@@ -22,10 +22,10 @@ const PILLARS: Pillar[] = [
   {
     id: "ast-determinism",
     code: "MOD-01",
-    title: "Deterministic-First Static Intelligence",
+    title: "Deterministic Static Intelligence",
     subtitle: "Syntactic Graph Extraction Before Heuristics",
     summary:
-      "Rather than relying on opaque probabilistic summaries, repository intelligence begins with deterministic Abstract Syntax Tree (AST) parsing—mapping exact module imports, call edges, and strongly connected clusters.",
+      "Rather than relying on probabilistic summaries, repository exploration begins with Abstract Syntax Tree (AST) parsing—mapping exact module imports, call edges, and strongly connected clusters.",
     invariant: "1,468 Nodes • 2,760 Directed Edges • 138 Communities",
     referenceSystem: "CodeLens Architecture",
     metricsLabel: "AST Graph Resolution",
@@ -36,19 +36,19 @@ const PILLARS: Pillar[] = [
     title: "Atomic State & Low-Latency Synchronization",
     subtitle: "Bidirectional Event Loops with Session Recovery",
     summary:
-      "Multiplayer and distributed engines demand deterministic turn propagation, automated bot fallback state machines, and atomic in-memory persistence so disconnected clients reconcile state without race conditions.",
-    invariant: "Socket.IO Event Pipeline + RedisJSON Atomic Document Store",
+      "Multiplayer and distributed engines demand deterministic turn propagation, automated bot fallback state machines, and atomic in-memory persistence so disconnected clients reconcile state cleanly.",
+    invariant: "Socket.IO Event Pipeline + RedisJSON In-Memory Document Store",
     referenceSystem: "Ludo Neo Engine",
     metricsLabel: "State Persistence Layer",
   },
   {
     id: "decoupled-playback",
     code: "MOD-03",
-    title: "Decoupled Execution & Visual Telemetry",
+    title: "Decoupled Execution & Visual Tracing",
     subtitle: "Pure Algorithmic State Traces vs. Render Frames",
     summary:
       "Separating pure data structure transformations from React animation loops ensures deterministic stepping, instant frame scrubbing, and predictable rendering across complex graph and tree traversals.",
-    invariant: "Pure Step Generator -> Immutable State Snapshot -> UI Frame",
+    invariant: "Step Generator -> Immutable State Snapshot -> UI Frame",
     referenceSystem: "AlgoVisuals Platform",
     metricsLabel: "Frame Determinism",
   },
@@ -58,7 +58,7 @@ const PILLARS: Pillar[] = [
     title: "Hardware-Grounded Systems Discipline",
     subtitle: "Complexity Analysis & Architectural Rigor",
     summary:
-      "Combining formal training in electronics, computer architecture, and discrete mathematics at NIT Agartala with C++ algorithmic optimization keeps high-level web architectures grounded in runtime reality.",
+      "Combining formal training in electronics, computer architecture, and discrete mathematics at NIT Agartala with algorithmic optimization in C++ keeps web and distributed architectures grounded in runtime constraints.",
     invariant: "Time/Space Complexity Bounds • Clean Module Boundaries",
     referenceSystem: "B.Tech. ECE // NIT Agartala",
     metricsLabel: "Engineering Foundation",
@@ -93,7 +93,7 @@ export const ArchitecturePhilosophySection: React.FC = () => {
           index="04"
           eyebrow="Engineering Philosophy"
           title="Systems Methodology & Problem-Solving"
-          description="Every project is engineered around explicit state invariants, deterministic data flow, and measurable runtime performance."
+          description="Every project is engineered around explicit state invariants, predictable data flow, and measurable runtime performance."
         />
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-stretch">
@@ -106,43 +106,52 @@ export const ArchitecturePhilosophySection: React.FC = () => {
             {PILLARS.map((pillar, idx) => {
               const active = pillar.id === activeId;
               return (
-                <Reveal key={pillar.id} delay={idx * 0.05}>
-                  <button
-                    type="button"
-                    role="tab"
-                    aria-selected={active}
-                    onClick={() => setActiveId(pillar.id)}
-                    className={`w-full text-left p-4 sm:p-5 rounded-md border transition-all cursor-pointer ${
-                      active
-                        ? "bg-surface-raised border-accent/60 shadow-[0_0_24px_rgba(56,242,230,0.08)]"
-                        : "bg-surface/60 border-white/[0.07] hover:border-white/20"
-                    }`}
-                  >
-                    <div className="flex items-center justify-between font-mono text-xs mb-1.5">
-                      <span
-                        className={
-                          active ? "text-accent font-semibold" : "text-text-dim"
-                        }
-                      >
-                        {pillar.code} // {pillar.referenceSystem}
-                      </span>
-                      {getIcon(pillar.id)}
-                    </div>
-                    <div className="text-base sm:text-lg font-normal text-white">
-                      {pillar.title}
-                    </div>
-                    <div className="text-xs font-mono text-text-muted mt-1">
-                      {pillar.subtitle}
-                    </div>
-                  </button>
-                </Reveal>
+                <div key={pillar.id} role="presentation">
+                  <Reveal delay={idx * 0.05}>
+                    <button
+                      type="button"
+                      role="tab"
+                      id={`tab-${pillar.id}`}
+                      aria-controls="pillar-panel"
+                      aria-selected={active}
+                      onClick={() => setActiveId(pillar.id)}
+                      className={`w-full text-left p-4 sm:p-5 rounded-md border transition-all cursor-pointer ${
+                        active
+                          ? "bg-surface-raised border-accent/60 shadow-[0_0_24px_rgba(56,242,230,0.08)]"
+                          : "bg-surface/60 border-white/[0.07] hover:border-white/20"
+                      }`}
+                    >
+                      <div className="flex items-center justify-between font-mono text-xs mb-1.5">
+                        <span
+                          className={
+                            active ? "text-accent font-semibold" : "text-text-dim"
+                          }
+                        >
+                          {pillar.code} // {pillar.referenceSystem}
+                        </span>
+                        {getIcon(pillar.id)}
+                      </div>
+                      <div className="text-base sm:text-lg font-normal text-white">
+                        {pillar.title}
+                      </div>
+                      <div className="text-xs font-mono text-text-muted mt-1">
+                        {pillar.subtitle}
+                      </div>
+                    </button>
+                  </Reveal>
+                </div>
               );
             })}
           </div>
 
           {/* Right Architectural Blueprint Readout */}
           <div className="lg:col-span-7">
-            <Card className="h-full justify-between border-white/[0.1] bg-void/90">
+            <Card
+              role="tabpanel"
+              id="pillar-panel"
+              aria-labelledby={`tab-${activeId}`}
+              className="h-full justify-between border-white/[0.1] bg-surface/80"
+            >
               <div className="space-y-6">
                 <div className="flex flex-wrap items-center justify-between gap-2 pb-4 border-b border-white/[0.08] font-mono text-xs">
                   <span className="text-accent uppercase tracking-widest">
@@ -176,15 +185,7 @@ export const ArchitecturePhilosophySection: React.FC = () => {
                 </div>
               </div>
 
-              <div className="pt-6 mt-6 border-t border-white/[0.07] grid grid-cols-2 sm:grid-cols-3 gap-4 font-mono text-xs">
-                <div>
-                  <span className="text-[10px] text-text-dim uppercase block">
-                    Verification Mode
-                  </span>
-                  <span className="text-text font-medium">
-                    Deterministic Schema
-                  </span>
-                </div>
+              <div className="pt-6 mt-6 border-t border-white/[0.07] flex items-center justify-between font-mono text-xs">
                 <div>
                   <span className="text-[10px] text-text-dim uppercase block">
                     Primary Focus
@@ -193,12 +194,12 @@ export const ArchitecturePhilosophySection: React.FC = () => {
                     {activePillar.metricsLabel}
                   </span>
                 </div>
-                <div className="col-span-2 sm:col-span-1">
+                <div className="text-right">
                   <span className="text-[10px] text-text-dim uppercase block">
-                    Reference Status
+                    Architecture Reference
                   </span>
                   <span className="text-accent font-medium">
-                    Production Verified
+                    {activePillar.referenceSystem}
                   </span>
                 </div>
               </div>

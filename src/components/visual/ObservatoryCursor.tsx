@@ -8,6 +8,7 @@ export const ObservatoryCursor: React.FC = () => {
   const [enabled, setEnabled] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
   const [isPointer, setIsPointer] = useState(false);
+  const [label, setLabel] = useState<string | null>(null);
 
   const mouseX = useMotionValue(-100);
   const mouseY = useMotionValue(-100);
@@ -41,6 +42,7 @@ export const ObservatoryCursor: React.FC = () => {
           "a, button, input, textarea, select, summary, [role='button'], [data-interactive='true']"
         );
         setIsPointer(Boolean(interactive));
+        setLabel(target.closest<HTMLElement>("[data-cursor]")?.dataset.cursor ?? null);
       }
     };
 
@@ -98,6 +100,14 @@ export const ObservatoryCursor: React.FC = () => {
             <div className="absolute -left-1 h-[1px] w-1.5 bg-accent" />
             <div className="absolute -right-1 h-[1px] w-1.5 bg-accent" />
           </>
+        )}
+      </motion.div>
+
+      <motion.div style={{ x: smoothX, y: smoothY }} className="absolute left-0 top-0">
+        {label && (
+          <span className="ml-5 mt-5 block whitespace-nowrap rounded-xs border border-accent/40 bg-void/80 px-1.5 py-0.5 font-mono text-[10px] uppercase tracking-widest text-accent">
+            {label}
+          </span>
         )}
       </motion.div>
     </div>

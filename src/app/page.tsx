@@ -6,6 +6,8 @@ import {
 } from "@/lib/content";
 import { SiteHeader } from "@/components/layout/SiteHeader";
 import { SiteFooter } from "@/components/layout/SiteFooter";
+import { Container } from "@/components/layout/Container";
+import { ScrollReadText } from "@/components/ui/ScrollReadText";
 import { HeroSection } from "@/components/sections/HeroSection";
 import { SelectedProjectsSection } from "@/components/sections/SelectedProjectsSection";
 import { CapabilitiesSection } from "@/components/sections/CapabilitiesSection";
@@ -21,12 +23,27 @@ export default function Home() {
   const education = getEducation();
 
   return (
-    <div className="relative min-h-screen bg-void flex flex-col selection:bg-accent/20 selection:text-white">
+    <div className="relative min-h-screen flex flex-col selection:bg-accent/20 selection:text-white">
       <ObservatoryCursor />
       <SiteHeader />
 
       <main id="main-content" className="flex-1">
         <HeroSection profile={profile} />
+
+        {profile.statement && (
+          <section id="statement" className="py-28 lg:py-44">
+            <Container size="narrow">
+              <p className="mb-8 font-mono text-xs uppercase tracking-[0.18em] text-text-muted">
+                Before the work
+              </p>
+              <ScrollReadText
+                text={profile.statement}
+                className="font-display text-3xl sm:text-4xl lg:text-5xl leading-[1.18] text-text"
+              />
+            </Container>
+          </section>
+        )}
+
         <SelectedProjectsSection projects={projects} />
         <CapabilitiesSection categories={skills} projects={projects} />
         <ArchitecturePhilosophySection />

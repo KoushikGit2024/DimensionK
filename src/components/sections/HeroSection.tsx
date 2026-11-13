@@ -1,6 +1,7 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
+import { motion, useReducedMotion, useScroll, useTransform } from "motion/react";
 import { Container } from "@/components/layout/Container";
 import { Profile } from "@/schemas/content";
 import {
@@ -8,8 +9,8 @@ import {
   type InstrumentSceneMode,
 } from "@/visual-engine/ObservatoryVisualEngine";
 import { ObservatoryGridOverlay } from "@/components/visual/ObservatoryGridOverlay";
-import { Button } from "@/components/ui/Button";
-import { Reveal } from "@/components/ui/Reveal";
+import { buttonStyles } from "@/components/ui/Button";
+import { Magnetic } from "@/components/ui/Magnetic";
 import { TelemetryStamp } from "@/components/ui/TelemetryStamp";
 import { ArrowDown, Send, Compass, Orbit, Eye } from "lucide-react";
 
@@ -29,79 +30,81 @@ const SCENE_MODES: {
 
 export const HeroSection: React.FC<HeroSectionProps> = ({ profile }) => {
   const [sceneMode, setSceneMode] = useState<InstrumentSceneMode>("core");
+  const heroRef = useRef<HTMLElement>(null);
+  const reduce = useReducedMotion();
+  const { scrollYProgress } = useScroll({
+    target: heroRef,
+    offset: ["start start", "end start"],
+  });
+  const sceneY = useTransform(scrollYProgress, [0, 1], [0, reduce ? 0 : 120]);
+  const sceneOpacity = useTransform(scrollYProgress, [0, 0.8], [1, 0.15]);
+  const [first, ...rest] = profile.displayName.split(" ");
 
   return (
     <section
+      ref={heroRef}
       id="about"
-      className="relative min-h-[92vh] flex flex-col justify-between pt-24 sm:pt-28 pb-12 overflow-hidden bg-void border-b border-white/[0.08] cosmic-radial-depth"
+      className="relative min-h-[92vh] flex flex-col justify-between pt-24 sm:pt-28 pb-12 overflow-hidden border-b border-white/[0.08] cosmic-radial-depth"
     >
       {/* Calibrated Architectural Meridian Overlay */}
       <ObservatoryGridOverlay />
 
-      {/* Adaptive 3D Deep-Space & Astrometric Instrument Engine */}
-      <ObservatoryVisualEngine mode={sceneMode} />
+      {/* Adaptive 3D Deep-Space & Astrometric Instrument Engine with scroll parallax */}
+      <motion.div className="absolute inset-0" style={{ y: sceneY, opacity: sceneOpacity }}>
+        <ObservatoryVisualEngine mode={sceneMode} />
+      </motion.div>
 
       <Container size="wide" className="relative z-10 w-full my-auto py-8 lg:py-12">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-center">
           {/* Editorial Left Column */}
           <div className="lg:col-span-7 space-y-6">
-            <Reveal direction="up" delay={0.05}>
-              <div className="flex flex-wrap items-center gap-2.5">
-                <TelemetryStamp label="STATION" value={profile.coordinates} />
-                <TelemetryStamp label="LOC" value={profile.location} />
-              </div>
-            </Reveal>
+            <div className="flex flex-wrap items-center gap-2.5">
+              <TelemetryStamp label="STATION" value={profile.coordinates} />
+              <TelemetryStamp label="LOC" value={profile.location} />
+            </div>
 
-            <Reveal direction="up" delay={0.12}>
-              <div className="space-y-3">
-                <p className="font-mono text-xs uppercase tracking-[0.2em] text-accent">
-                  01 // Deep-Space Systems & Software Engineering
-                </p>
-                <h1 className="text-4xl sm:text-6xl lg:text-7xl xl:text-[5.25rem] font-normal tracking-tight text-white uppercase leading-[0.98]">
-                  {profile.displayName}
-                </h1>
-                <p className="text-xl sm:text-2xl lg:text-3xl font-light text-accent-subtle tracking-tight">
-                  {profile.headline}
-                </p>
-              </div>
-            </Reveal>
-
-            <Reveal direction="up" delay={0.2}>
-              <p className="max-w-2xl text-sm sm:text-base lg:text-lg text-text-secondary leading-relaxed">
-                {profile.summary}
+            <div className="space-y-3">
+              <p className="font-mono text-xs uppercase tracking-[0.2em] text-text-muted">
+                Systems &amp; software engineering
               </p>
-            </Reveal>
+              <h1 className="font-display text-[clamp(3.5rem,11vw,9rem)] leading-[0.9] tracking-tight text-text">
+                {first} <em className="italic text-warm">{rest.join(" ")}</em>
+              </h1>
+              <p className="text-xl sm:text-2xl lg:text-3xl font-light text-accent-subtle tracking-tight">
+                {profile.headline}
+              </p>
+            </div>
 
-            <Reveal direction="up" delay={0.28}>
-              <div className="flex flex-wrap items-center gap-3.5 pt-2">
-                <a href="#work">
-                  <Button
-                    variant="primary"
-                    size="lg"
-                    className="border-accent/40 hover:border-accent"
-                  >
-                    <span>Inspect Constellation Works</span>
-                    <ArrowDown className="w-4 h-4 text-accent" />
-                  </Button>
+            <p className="max-w-2xl text-sm sm:text-base lg:text-lg text-text-secondary leading-relaxed">
+              {profile.summary}
+            </p>
+
+            <div className="flex flex-wrap items-center gap-3.5 pt-2">
+              <Magnetic>
+                <a
+                  href="#work"
+                  className={buttonStyles("primary", "lg", "border-accent/40 hover:border-accent")}
+                >
+                  <span>Inspect Constellation Works</span>
+                  <ArrowDown className="w-4 h-4 text-accent" />
                 </a>
-                <a href="#contact">
-                  <Button
-                    variant="secondary"
-                    size="lg"
-                    className="border-white/[0.12] hover:border-white/30"
-                  >
-                    <span>Open Transmission</span>
-                    <Send className="w-4 h-4 text-text-muted" />
-                  </Button>
+              </Magnetic>
+              <Magnetic>
+                <a
+                  href="#contact"
+                  className={buttonStyles("secondary", "lg", "border-white/[0.12] hover:border-white/30")}
+                >
+                  <span>Open Transmission</span>
+                  <Send className="w-4 h-4 text-text-muted" />
                 </a>
-              </div>
-            </Reveal>
+              </Magnetic>
+            </div>
           </div>
 
           {/* Right Spatial Instrument Control Column */}
           <div className="lg:col-span-5 flex flex-col justify-end lg:min-h-[420px]">
-            <Reveal direction="left" delay={0.32} className="mt-auto lg:ml-auto w-full max-w-sm">
-              <div className="p-4 rounded-md border border-white/[0.09] bg-void/80 backdrop-blur-md space-y-3">
+            <div className="mt-auto lg:ml-auto w-full max-w-sm">
+              <div className="p-4 rounded-md border border-white/[0.09] bg-surface/80 backdrop-blur-md space-y-3">
                 <div className="flex items-center justify-between text-[11px] font-mono text-text-muted border-b border-white/[0.06] pb-2">
                   <span className="flex items-center gap-1.5 uppercase tracking-wider">
                     <Compass className="w-3.5 h-3.5 text-accent" />
@@ -145,7 +148,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ profile }) => {
                     "Zero-GPU static optical astrolabe calibration schematic."}
                 </p>
               </div>
-            </Reveal>
+            </div>
           </div>
         </div>
       </Container>
@@ -161,7 +164,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ profile }) => {
             <div className="text-lg sm:text-xl text-white font-medium">
               04{" "}
               <span className="text-xs text-text-muted font-normal">
-                Production Architectures
+                Projects on GitHub
               </span>
             </div>
           </div>

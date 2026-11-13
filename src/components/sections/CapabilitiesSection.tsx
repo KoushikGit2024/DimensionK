@@ -41,16 +41,18 @@ export const CapabilitiesSection: React.FC<CapabilitiesSectionProps> = ({
   const [filterLevel, setFilterLevel] = useState<"all" | "strong">("all");
   const [selectedSkill, setSelectedSkill] = useState<string>("TypeScript");
 
-  const relatedProjectSlugs = SKILL_PROJECT_MAP[selectedSkill] || [];
   const matchedProjects = useMemo(
-    () => projects.filter((p) => relatedProjectSlugs.includes(p.slug)),
-    [projects, relatedProjectSlugs]
+    () =>
+      projects.filter((p) =>
+        (SKILL_PROJECT_MAP[selectedSkill] ?? []).includes(p.slug)
+      ),
+    [projects, selectedSkill]
   );
 
   return (
     <section
       id="capabilities"
-      className="py-20 lg:py-28 border-b border-white/[0.08] bg-void"
+      className="py-20 lg:py-28 border-b border-white/[0.08]"
     >
       <Container size="wide">
         <SectionHeading

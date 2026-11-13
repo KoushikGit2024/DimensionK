@@ -2,11 +2,11 @@
 
 :root {
   /* Deep-Space Observatory Void & Calibrated Surface Tokens */
-  --color-void: #05080d;
-  --color-surface: #090e17;
-  --color-surface-raised: #0e1624;
-  --color-surface-muted: #162235;
-  --color-surface-glass: rgba(10, 16, 26, 0.72);
+  --color-void: #07090e;
+  --color-surface: #0c1018;
+  --color-surface-raised: #121823;
+  --color-surface-muted: #1a2332;
+  --color-surface-glass: rgba(12, 16, 24, 0.6);
 
   /* Precision Optical Hairline Borders & Glow Tokens */
   --border-hairline: rgba(255, 255, 255, 0.07);
@@ -15,17 +15,17 @@
   --border-strong: rgba(148, 163, 184, 0.38);
 
   /* Editorial Typography Hierarchy */
-  --color-text: #f1f5f9;
-  --color-text-secondary: #94a3b8;
-  --color-text-muted: #64748b;
-  --color-text-dim: #475569;
+  --color-text: #ece7dc;            /* warm paper, not cold white */
+  --color-text-secondary: #a3a8b3;
+  --color-text-muted: #8c93a3;
+  --color-text-dim: #747c8e;        /* was ~2.7:1, now above 4.5:1 */
 
   /* Calibrated Astronomical Accents */
   --color-accent: #38f2e6;
   --color-accent-subtle: #7dd3fc;
   --color-accent-strong: #ffffff;
   --color-focus: #38bdf8;
-  --color-warm: #f59e0b;
+  --color-warm: #f0a35e;            /* ember: the human colour */
 
   /* Motion Curves */
   --ease-standard: cubic-bezier(0.2, 0.7, 0.2, 1);
@@ -58,6 +58,7 @@
 
   --font-sans: var(--font-geist-sans), system-ui, -apple-system, sans-serif;
   --font-mono: var(--font-geist-mono), ui-monospace, SFMono-Regular, monospace;
+  --font-display: var(--font-instrument), Georgia, serif;
 }
 
 html {
@@ -116,7 +117,6 @@ body {
 }
 
 .bg-deep-space-grid {
-  background-color: var(--color-void);
   background-image:
     linear-gradient(to right, rgba(255, 255, 255, 0.025) 1px, transparent 1px),
     linear-gradient(to bottom, rgba(255, 255, 255, 0.025) 1px, transparent 1px);
@@ -129,3 +129,14 @@ body {
     linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
   background-size: 48px 48px;
 }
+
+/* Underline that draws in, for text links */
+.link-draw {
+  background-image: linear-gradient(currentColor, currentColor);
+  background-size: 0% 1px;
+  background-position: 0 100%;
+  background-repeat: no-repeat;
+  transition: background-size 0.35s var(--ease-enter);
+}
+.link-draw:hover,
+.link-draw:focus-visible { background-size: 100% 1px; }
