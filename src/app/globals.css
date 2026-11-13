@@ -1,32 +1,33 @@
 @import "tailwindcss";
 
 :root {
-  /* Obsidian Void & Surface Tokens */
-  --color-void: #06090e;
-  --color-surface: #0a0f17;
-  --color-surface-raised: #0f1622;
-  --color-surface-glass: rgba(13, 20, 31, 0.55);
+  /* Deep-Space Observatory Void & Calibrated Surface Tokens */
+  --color-void: #05080d;
+  --color-surface: #090e17;
+  --color-surface-raised: #0e1624;
+  --color-surface-muted: #162235;
+  --color-surface-glass: rgba(10, 16, 26, 0.72);
 
-  /* Sleek Hairline Borders & Glow Tokens */
+  /* Precision Optical Hairline Borders & Glow Tokens */
   --border-hairline: rgba(255, 255, 255, 0.07);
   --border-subtle: rgba(255, 255, 255, 0.12);
-  --border-glow: rgba(0, 255, 238, 0.25);
-  --border-strong: rgba(142, 169, 196, 0.4);
+  --border-glow: rgba(56, 242, 230, 0.28);
+  --border-strong: rgba(148, 163, 184, 0.38);
 
-  /* Typography Colors */
-  --color-text: #f0f4f8;
+  /* Editorial Typography Hierarchy */
+  --color-text: #f1f5f9;
   --color-text-secondary: #94a3b8;
   --color-text-muted: #64748b;
-  --color-text-dim: #334155;
+  --color-text-dim: #475569;
 
-  /* Restrained Luminous Accents */
-  --color-accent: #00ffee;
-  --color-accent-subtle: #70eeff;
+  /* Calibrated Astronomical Accents */
+  --color-accent: #38f2e6;
+  --color-accent-subtle: #7dd3fc;
   --color-accent-strong: #ffffff;
   --color-focus: #38bdf8;
   --color-warm: #f59e0b;
 
-  /* Motion Tokens */
+  /* Motion Curves */
   --ease-standard: cubic-bezier(0.2, 0.7, 0.2, 1);
   --ease-enter: cubic-bezier(0.16, 1, 0.3, 1);
   --ease-exit: cubic-bezier(0.7, 0, 0.84, 0);
@@ -36,6 +37,7 @@
   --color-void: var(--color-void);
   --color-surface: var(--color-surface);
   --color-surface-raised: var(--color-surface-raised);
+  --color-surface-muted: var(--color-surface-muted);
   --color-surface-glass: var(--color-surface-glass);
 
   --color-border: var(--border-hairline);
@@ -61,6 +63,7 @@
 html {
   color-scheme: dark;
   scroll-behavior: smooth;
+  scroll-padding-top: 5rem;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -85,27 +88,44 @@ body {
   overflow-x: hidden;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-/* Precision scrollbar */
+/* Precision Observatory Scrollbar */
 ::-webkit-scrollbar {
-  width: 5px;
-  height: 5px;
+  width: 6px;
+  height: 6px;
 }
 ::-webkit-scrollbar-track {
   background: var(--color-void);
 }
 ::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.12);
-  border-radius: 2px;
+  background: rgba(148, 163, 184, 0.2);
+  border-radius: 3px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(0, 255, 238, 0.4);
+  background: rgba(56, 242, 230, 0.45);
 }
 
-/* Cosmic subtle depth glow */
+/* Deep-space atmospheric depth & subtle astrometric grid */
 .cosmic-radial-depth {
-  background-image: 
-    radial-gradient(circle at 75% 25%, rgba(0, 255, 238, 0.035) 0%, transparent 45%),
-    radial-gradient(circle at 25% 75%, rgba(112, 238, 255, 0.025) 0%, transparent 40%);
+  background-image:
+    radial-gradient(circle at 76% 32%, rgba(56, 242, 230, 0.045) 0%, transparent 48%),
+    radial-gradient(circle at 18% 78%, rgba(125, 211, 252, 0.03) 0%, transparent 42%),
+    radial-gradient(circle at 50% 0%, rgba(15, 23, 42, 0.65) 0%, transparent 60%);
+}
+
+.bg-deep-space-grid {
+  background-color: var(--color-void);
+  background-image:
+    linear-gradient(to right, rgba(255, 255, 255, 0.025) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.025) 1px, transparent 1px);
+  background-size: 64px 64px;
+}
+
+.observatory-hairline-grid {
+  background-image:
+    linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+  background-size: 48px 48px;
 }

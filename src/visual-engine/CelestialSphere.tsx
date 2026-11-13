@@ -11,11 +11,10 @@ export const CelestialSphere: React.FC = () => {
   const satellite3Ref = useRef<THREE.Mesh>(null);
   const accumulatedTimeRef = useRef(0);
 
-  // Generate Latitude Rings (Horizontals)
   const latitudeLines = useMemo(() => {
     const lines = [];
-    const radius = 2.0;
-    const count = 9;
+    const radius = 2.15;
+    const count = 8;
     for (let i = 1; i < count; i++) {
       const phi = (i / count) * Math.PI;
       const r = radius * Math.sin(phi);
@@ -25,128 +24,130 @@ export const CelestialSphere: React.FC = () => {
     return lines;
   }, []);
 
-  // Generate Longitude Meridians (Verticals)
   const longitudeLines = useMemo(() => {
     const lines = [];
-    const count = 12;
+    const count = 10;
     for (let i = 0; i < count; i++) {
-      const rot = (i / count) * Math.PI;
-      lines.push(rot);
+      lines.push((i / count) * Math.PI);
     }
     return lines;
   }, []);
 
   useFrame((_, delta) => {
-    accumulatedTimeRef.current += delta;
+    const dt = Math.min(delta, 0.1);
+    accumulatedTimeRef.current += dt;
     const t = accumulatedTimeRef.current;
 
     if (groupRef.current) {
-      groupRef.current.rotation.y += delta * 0.12;
-      groupRef.current.rotation.x = Math.sin(t * 0.15) * 0.08;
+      groupRef.current.rotation.y += dt * 0.11;
+      groupRef.current.rotation.x = Math.sin(t * 0.16) * 0.09;
     }
 
-    // Animate Satellite 1 along elliptical inclined orbit
     if (satellite1Ref.current) {
-      const angle = t * 0.5;
-      satellite1Ref.current.position.x = Math.cos(angle) * 3.1;
-      satellite1Ref.current.position.y = Math.sin(angle) * 1.5;
-      satellite1Ref.current.position.z = Math.sin(angle) * 2.2;
+      const angle = t * 0.48;
+      satellite1Ref.current.position.set(
+        Math.cos(angle) * 3.15,
+        Math.sin(angle) * 1.45,
+        Math.sin(angle) * 2.25
+      );
     }
 
-    // Animate Satellite 2 along polar orbit
     if (satellite2Ref.current) {
-      const angle = -t * 0.4 + 2.0;
-      satellite2Ref.current.position.x = Math.sin(angle) * 1.6;
-      satellite2Ref.current.position.y = Math.cos(angle) * 2.9;
-      satellite2Ref.current.position.z = Math.sin(angle) * 2.4;
+      const angle = -t * 0.38 + 2.1;
+      satellite2Ref.current.position.set(
+        Math.sin(angle) * 1.65,
+        Math.cos(angle) * 2.95,
+        Math.sin(angle) * 2.35
+      );
     }
 
-    // Animate Satellite 3 along wide outer orbit
     if (satellite3Ref.current) {
-      const angle = t * 0.3 + 4.0;
-      satellite3Ref.current.position.x = Math.cos(angle) * 3.6;
-      satellite3Ref.current.position.y = Math.sin(angle) * 0.8;
-      satellite3Ref.current.position.z = Math.sin(angle) * 2.8;
+      const angle = t * 0.28 + 4.2;
+      satellite3Ref.current.position.set(
+        Math.cos(angle) * 3.65,
+        Math.sin(angle) * 0.85,
+        Math.sin(angle) * 2.75
+      );
     }
   });
 
   return (
     <group ref={groupRef}>
-      {/* Central Dense Core Mesh */}
+      {/* Inner Calibration Geodesic Sphere */}
       <mesh>
-        <sphereGeometry args={[0.9, 32, 32]} />
+        <sphereGeometry args={[0.92, 24, 24]} />
         <meshBasicMaterial
-          color="#1e2736"
+          color="#1e293b"
           wireframe
           transparent
-          opacity={0.6}
-        />
-      </mesh>
-
-      {/* Primary Wireframe Sphere Latitude Lines */}
-      {latitudeLines.map((line, idx) => (
-        <lineLoop key={`lat-${idx}`} position={[0, line.y, 0]}>
-          <ringGeometry args={[line.r, line.r + 0.005, 64]} />
-          <meshBasicMaterial
-            color="#475569"
-            transparent
-            opacity={0.3}
-            side={THREE.DoubleSide}
-          />
-        </lineLoop>
-      ))}
-
-      {/* Primary Wireframe Sphere Longitude Lines */}
-      {longitudeLines.map((rot, idx) => (
-        <lineLoop key={`lon-${idx}`} rotation={[0, rot, 0]}>
-          <ringGeometry args={[2.0, 2.005, 64]} />
-          <meshBasicMaterial
-            color="#475569"
-            transparent
-            opacity={0.25}
-            side={THREE.DoubleSide}
-          />
-        </lineLoop>
-      ))}
-
-      {/* Major Tilted Elliptical Orbit Track 1 */}
-      <lineLoop rotation={[Math.PI / 4, Math.PI / 6, 0]}>
-        <ringGeometry args={[3.1, 3.108, 96]} />
-        <meshBasicMaterial
-          color="#8ea9c4"
-          transparent
           opacity={0.65}
-          side={THREE.DoubleSide}
         />
-      </lineLoop>
+      </mesh>
 
-      {/* Major Tilted Elliptical Orbit Track 2 */}
-      <lineLoop rotation={[-Math.PI / 3, Math.PI / 5, 0]}>
-        <ringGeometry args={[2.9, 2.908, 96]} />
+      {/* Latitude Parallels */}
+      {latitudeLines.map((line, idx) => (
+        <mesh
+          key={`lat-${idx}`}
+          position={[0, line.y, 0]}
+          rotation={[Math.PI / 2, 0, 0]}
+        >
+          <ringGeometry args={[line.r, line.r + 0.008, 64]} />
+          <meshBasicMaterial
+            color="#38f2e6"
+            transparent
+            opacity={idx === 4 ? 0.42 : 0.18}
+            side={THREE.DoubleSide}
+          />
+        </mesh>
+      ))}
+
+      {/* Longitude Meridians */}
+      {longitudeLines.map((rot, idx) => (
+        <mesh key={`lon-${idx}`} rotation={[0, rot, 0]}>
+          <ringGeometry args={[2.15, 2.158, 64]} />
+          <meshBasicMaterial
+            color="#64748b"
+            transparent
+            opacity={0.22}
+            side={THREE.DoubleSide}
+          />
+        </mesh>
+      ))}
+
+      {/* Inclined Ecliptic Track */}
+      <mesh rotation={[Math.PI / 4, Math.PI / 6, 0]}>
+        <ringGeometry args={[3.15, 3.164, 96]} />
         <meshBasicMaterial
-          color="#94a3b8"
+          color="#38f2e6"
           transparent
-          opacity={0.5}
+          opacity={0.55}
           side={THREE.DoubleSide}
         />
-      </lineLoop>
+      </mesh>
 
-      {/* Orbiting Satellite Node 1 (Bright white celestial marker) */}
+      {/* Polar Horizon Track */}
+      <mesh rotation={[-Math.PI / 3, Math.PI / 5, 0]}>
+        <ringGeometry args={[2.95, 2.962, 96]} />
+        <meshBasicMaterial
+          color="#7dd3fc"
+          transparent
+          opacity={0.38}
+          side={THREE.DoubleSide}
+        />
+      </mesh>
+
+      {/* Ephemeris Satellites */}
       <mesh ref={satellite1Ref}>
-        <sphereGeometry args={[0.07, 16, 16]} />
-        <meshBasicMaterial color="#ffffff" />
+        <sphereGeometry args={[0.075, 16, 16]} />
+        <meshBasicMaterial color="#38f2e6" />
       </mesh>
-
-      {/* Orbiting Satellite Node 2 */}
       <mesh ref={satellite2Ref}>
-        <sphereGeometry args={[0.05, 16, 16]} />
-        <meshBasicMaterial color="#cbd5e1" />
+        <sphereGeometry args={[0.055, 16, 16]} />
+        <meshBasicMaterial color="#f8fafc" />
       </mesh>
-
-      {/* Orbiting Satellite Node 3 */}
       <mesh ref={satellite3Ref}>
-        <sphereGeometry args={[0.06, 16, 16]} />
-        <meshBasicMaterial color="#94a3b8" />
+        <sphereGeometry args={[0.065, 16, 16]} />
+        <meshBasicMaterial color="#f59e0b" />
       </mesh>
     </group>
   );

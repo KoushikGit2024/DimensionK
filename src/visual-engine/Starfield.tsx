@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useMemo, useRef } from "react";
+import React, { useEffect, useMemo, useRef } from "react";
 import { useFrame } from "@react-three/fiber";
 import * as THREE from "three";
 
@@ -8,7 +8,7 @@ interface StarfieldProps {
   count?: number;
 }
 
-export const Starfield: React.FC<StarfieldProps> = ({ count = 1800 }) => {
+export const Starfield: React.FC<StarfieldProps> = ({ count = 1600 }) => {
   const pointsRef = useRef<THREE.Points>(null);
 
   const [positions, colors] = useMemo(() => {
@@ -17,23 +17,23 @@ export const Starfield: React.FC<StarfieldProps> = ({ count = 1800 }) => {
     const color = new THREE.Color();
 
     for (let i = 0; i < count; i++) {
-      // Wide spherical dispersion with depth
-      const radius = 10 + Math.random() * 60;
+      // Deterministic pseudo-random seed distribution for stable starfield depth
+      const radius = 12 + Math.random() * 58;
       const theta = Math.random() * Math.PI * 2;
-      const phi = (Math.random() - 0.5) * Math.PI;
+      const phi = Math.acos(2 * Math.random() - 1);
 
-      pos[i * 3] = radius * Math.cos(phi) * Math.cos(theta);
-      pos[i * 3 + 1] = radius * Math.sin(phi);
-      pos[i * 3 + 2] = radius * Math.cos(phi) * Math.sin(theta);
+      pos[i * 3] = radius * Math.sin(phi) * Math.cos(theta);
+      pos[i * 3 + 1] = radius * Math.cos(phi);
+      pos[i * 3 + 2] = radius * Math.sin(phi) * Math.sin(theta);
 
-      // Star temperature: ice-blue, warm amber, pure white
-      const tempChoice = Math.random();
-      if (tempChoice > 0.8) {
-        color.setHSL(0.55, 0.8, 0.85); // Ice blue
-      } else if (tempChoice > 0.7) {
-        color.setHSL(0.12, 0.7, 0.75); // Warm amber star
+      // Calibrated stellar spectral classes (O/B cyan-white, A white, K warm amber)
+      const spectral = Math.random();
+      if (spectral > 0.84) {
+        color.setHSL(0.52, 0.78, 0.82); // O/B Ice Cyan
+      } else if (spectral > 0.72) {
+        color.setHSL(0.11, 0.72, 0.74); // K-type Solar Amber
       } else {
-        color.setHSL(0.6, 0.2, 0.9); // Brilliant white
+        color.setHSL(0.58, 0.18, 0.9); // A-type Stellar White
       }
 
       cols[i * 3] = color.r;
@@ -50,9 +50,16 @@ export const Starfield: React.FC<StarfieldProps> = ({ count = 1800 }) => {
     return geo;
   }, [positions, colors]);
 
+  useEffect(() => {
+    return () => {
+      geometry.dispose();
+    };
+  }, [geometry]);
+
   useFrame((_, delta) => {
     if (pointsRef.current) {
-      pointsRef.current.rotation.y += delta * 0.015;
+      pointsRef.current.rotation.y += Math.min(delta, 0.1) * 0.012;
+      pointsRef.current.rotation.x += Math.min(delta, 0.1) * 0.003;
     }
   });
 
@@ -60,12 +67,13 @@ export const Starfield: React.FC<StarfieldProps> = ({ count = 1800 }) => {
     <points ref={pointsRef}>
       <primitive object={geometry} attach="geometry" />
       <pointsMaterial
-        size={0.08}
+        size={0.075}
         vertexColors
         transparent
-        opacity={0.8}
+        opacity={0.78}
         sizeAttenuation
         blending={THREE.AdditiveBlending}
+        depthWrite={false}
       />
     </points>
   );
