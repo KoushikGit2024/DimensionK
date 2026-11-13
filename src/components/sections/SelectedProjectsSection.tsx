@@ -6,6 +6,7 @@ import { ArrowUpRight, GitBranch } from "lucide-react";
 import { Container } from "@/components/layout/Container";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { CountUp } from "@/components/ui/CountUp";
+import { ProjectConstellation } from "@/components/visual/ProjectConstellation";
 import type { Project } from "@/schemas/content";
 
 interface Props {
@@ -20,11 +21,22 @@ export const SelectedProjectsSection: React.FC<Props> = ({ projects }) => {
     <section id="work" className="py-24 lg:py-36">
       <Container size="wide">
         <SectionHeading
-          index="02"
+          index="01"
           eyebrow="Selected work"
           title="Things I have built"
           description="Developer tooling, a real-time multiplayer engine, an algorithm visualizer and a full-stack workspace. Open any row for the details."
         />
+
+        <div className="my-8">
+          <ProjectConstellation
+            projects={projects}
+            onSelect={(slug) => {
+              setOpen(slug);
+              const el = document.getElementById(`project-${slug}`);
+              if (el) el.scrollIntoView({ behavior: "smooth" });
+            }}
+          />
+        </div>
 
         <ol className="border-t border-white/[0.08]">
           {projects.map((p, i) => {
@@ -33,6 +45,7 @@ export const SelectedProjectsSection: React.FC<Props> = ({ projects }) => {
             return (
               <li
                 key={p.slug}
+                id={`project-${p.slug}`}
                 className={`border-b border-white/[0.08] transition-opacity duration-300 ${
                   dimmed ? "opacity-40" : "opacity-100"
                 }`}
