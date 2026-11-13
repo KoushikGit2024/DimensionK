@@ -4,68 +4,62 @@ import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { Container } from "./Container";
 import { TelemetryHUD } from "@/components/visual/TelemetryHUD";
-import { Menu, X } from "lucide-react";
+import { useActiveSection } from "@/hooks/useActiveSection";
+import { Menu, X, Command } from "lucide-react";
 
 const NAV_LINKS = [
-  { id: "about", label: "Station", href: "/#about" },
-  { id: "work", label: "Projects", href: "/#work" },
+  { id: "hero", label: "Horizon", href: "/#hero" },
+  { id: "work", label: "Selected Works", href: "/#work" },
   { id: "capabilities", label: "Capabilities", href: "/#capabilities" },
   { id: "methodology", label: "Methodology", href: "/#methodology" },
   { id: "logbook", label: "Logbook", href: "/#logbook" },
-  { id: "contact", label: "Contact", href: "/#contact" },
+  { id: "contact", label: "Transmission", href: "/#contact" },
 ];
 
 export const SiteHeader: React.FC = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [activeSection, setActiveSection] = useState<string>("about");
   const [scrolled, setScrolled] = useState(false);
+  const [hidden, setHidden] = useState(false);
+  const activeSection = useActiveSection(NAV_LINKS.map((n) => n.id));
 
   useEffect(() => {
+    let lastY = window.scrollY;
+
     const handleScroll = () => {
-      setScrolled(window.scrollY > 24);
+      const currentY = window.scrollY;
+      setScrolled(currentY > 24);
+
+      if (currentY > 100 && currentY - lastY > 8) {
+        setHidden(true); // scrolling down
+      } else if (lastY - currentY > 8 || currentY <= 100) {
+        setHidden(false); // scrolling up
+      }
+
+      lastY = currentY;
     };
+
     handleScroll();
     window.addEventListener("scroll", handleScroll, { passive: true });
 
-    const sectionElements = NAV_LINKS.map((item) =>
-      document.getElementById(item.id)
-    ).filter((el): el is HTMLElement => el !== null);
-
-    let observer: IntersectionObserver | null = null;
-    if (sectionElements.length > 0 && "IntersectionObserver" in window) {
-      observer = new IntersectionObserver(
-        (entries) => {
-          entries.forEach((entry) => {
-            if (entry.isIntersecting) {
-              setActiveSection(entry.target.id);
-            }
-          });
-        },
-        { rootMargin: "-25% 0px -60% 0px", threshold: 0.05 }
-      );
-      sectionElements.forEach((el) => observer?.observe(el));
-    }
-
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape") {
-        setMobileMenuOpen(false);
-      }
+      if (e.key === "Escape") setMobileMenuOpen(false);
     };
     window.addEventListener("keydown", handleKeyDown);
 
     return () => {
       window.removeEventListener("scroll", handleScroll);
       window.removeEventListener("keydown", handleKeyDown);
-      if (observer) observer.disconnect();
     };
   }, []);
 
   return (
     <header
-      className={`fixed top-0 left-0 right-0 z-50 transition-colors duration-300 border-b ${
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 border-b ${
+        hidden ? "-translate-y-full" : "translate-y-0"
+      } ${
         scrolled
-          ? "bg-void/90 backdrop-blur-xl border-white/[0.1]"
-          : "bg-void/70 backdrop-blur-md border-white/[0.06]"
+          ? "bg-surface-raised/90 backdrop-blur-xl border-white/[0.1]"
+          : "bg-surface-raised/60 backdrop-blur-md border-white/[0.06]"
       } h-16 sm:h-20 flex items-center`}
     >
       <Container size="wide" className="w-full">
@@ -93,82 +87,107 @@ export const SiteHeader: React.FC = () => {
             </div>
           </div>
 
-          <nav
-            aria-label="Primary navigation"
-            className="hidden md:flex items-center gap-1 lg:gap-2 text-xs font-mono tracking-wider"
-          >
-            {NAV_LINKS.map((item, idx) => {
-              const isActive = activeSection === item.id;
-              return (
-                <a
-                  key={item.id}
-                  href={item.href}
-                  aria-current={isActive ? "location" : undefined}
-                  className={`px-3 py-1.5 rounded-xs transition-all relative outline-none focus-visible:ring-2 focus-visible:ring-accent ${
-                    isActive
-                      ? "text-accent bg-accent/[0.08] border border-accent/30"
-                      : "text-text-secondary hover:text-text border border-transparent hover:border-white/[0.08]"
-                  }`}
-                >
-                  <span className="text-text-dim mr-1 hidden lg:inline">
-                    0{idx + 1}.
-                  </span>
-                  <span>{item.label}</span>
-                </a>
-              );
-            })}
-          </nav>
+          <div className="flex items-center gap-4">
+            <nav
+              aria-label="Primary navigation"
+              className="hidden md:flex items-center gap-1 text-xs font-mono tracking-wider"
+            >
+              {NAV_LINKS.map((item) => {
+                const isActive = activeSection === item.id;
+                return (
+                  <a
+                    key={item.id}
+                    href={item.href}
+                    aria-current={isActive ? "location" : undefined}
+                    className={`px-3 py-1.5 rounded-xs transition-all outline-none focus-visible:ring-2 focus-visible:ring-accent ${
+                      isActive
+                        ? "text-warm bg-warm/10 border border-warm/30 font-medium"
+                        : "text-text-secondary hover:text-text border border-transparent hover:border-white/[0.08]"
+                    }`}
+                  >
+                    <span>{item.label}</span>
+                  </a>
+                );
+              })}
+            </nav>
 
-          <button
-            type="button"
-            onClick={() => setMobileMenuOpen((prev) => !prev)}
-            aria-expanded={mobileMenuOpen}
-            aria-controls="mobile-nav-drawer"
-            aria-label={
-              mobileMenuOpen ? "Close navigation menu" : "Open navigation menu"
-            }
-            className="md:hidden inline-flex items-center justify-center w-10 h-10 rounded-xs border border-white/[0.1] bg-surface text-text-secondary hover:text-white focus-visible:ring-2 focus-visible:ring-accent outline-none"
-          >
-            {mobileMenuOpen ? (
-              <X className="w-5 h-5 text-accent" />
-            ) : (
-              <Menu className="w-5 h-5" />
-            )}
-          </button>
+            {/* Quick Command Palette Launcher Indicator */}
+            <button
+              type="button"
+              onClick={() => {
+                window.dispatchEvent(
+                  new KeyboardEvent("keydown", { key: "k", ctrlKey: true })
+                );
+              }}
+              className="hidden sm:inline-flex items-center gap-1.5 px-2 py-1 rounded bg-white/[0.03] border border-white/10 hover:border-white/20 text-text-dim text-[11px] font-mono transition-colors cursor-pointer"
+              title="Open Command Palette (Ctrl+K)"
+            >
+              <Command className="w-3 h-3 text-accent" />
+              <span>K</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => setMobileMenuOpen((prev) => !prev)}
+              aria-expanded={mobileMenuOpen}
+              aria-controls="mobile-nav-drawer"
+              aria-label={
+                mobileMenuOpen ? "Close navigation menu" : "Open navigation menu"
+              }
+              className="md:hidden inline-flex items-center justify-center w-10 h-10 rounded-xs border border-white/[0.1] bg-surface text-text-secondary hover:text-white focus-visible:ring-2 focus-visible:ring-accent outline-none"
+            >
+              {mobileMenuOpen ? (
+                <X className="w-5 h-5 text-accent" />
+              ) : (
+                <Menu className="w-5 h-5" />
+              )}
+            </button>
+          </div>
         </div>
       </Container>
 
+      {/* Full-Height Mobile Drawer */}
       {mobileMenuOpen && (
         <div
           id="mobile-nav-drawer"
-          className="md:hidden absolute top-full left-0 right-0 bg-void/95 backdrop-blur-2xl border-b border-white/[0.12] px-4 pt-4 pb-6 space-y-4 shadow-2xl"
+          className="md:hidden fixed inset-0 top-16 bg-surface-raised/95 backdrop-blur-2xl z-50 p-6 flex flex-col justify-between"
         >
-          <div className="pb-3 border-b border-white/[0.08]">
-            <TelemetryHUD />
+          <div className="space-y-6">
+            <div className="pb-4 border-b border-white/[0.08]">
+              <TelemetryHUD />
+            </div>
+
+            <nav aria-label="Mobile navigation" className="space-y-3">
+              {NAV_LINKS.map((item) => {
+                const isActive = activeSection === item.id;
+                return (
+                  <a
+                    key={item.id}
+                    href={item.href}
+                    onClick={() => setMobileMenuOpen(false)}
+                    className={`block py-3 px-4 rounded-md font-display text-2xl transition-colors ${
+                      isActive
+                        ? "text-warm bg-warm/10 border-l-2 border-warm"
+                        : "text-text-secondary hover:text-text"
+                    }`}
+                  >
+                    {item.label}
+                  </a>
+                );
+              })}
+            </nav>
           </div>
-          <nav
-            aria-label="Mobile navigation"
-            className="grid grid-cols-2 gap-2"
-          >
-            {NAV_LINKS.map((item, idx) => {
-              const isActive = activeSection === item.id;
-              return (
-                <a
-                  key={item.id}
-                  href={item.href}
-                  onClick={() => setMobileMenuOpen(false)}
-                  className={`flex items-center gap-2 px-3.5 py-2.5 rounded-xs text-xs font-mono border transition-colors ${
-                    isActive
-                      ? "border-accent/40 bg-accent/10 text-accent font-medium"
-                      : "border-white/[0.06] bg-surface/60 text-text hover:border-white/20"
-                  }`}
-                >
-                  <span className="text-text-dim">0{idx + 1}</span>
-                  <span>{item.label}</span>
-                </a>
-              );
-            })}
-          </nav>
+
+          <div className="pt-6 border-t border-white/[0.08] font-mono text-xs text-text-dim flex items-center justify-between">
+            <span>DIMENSION-K OBSERVATORY</span>
+            <button
+              type="button"
+              onClick={() => setMobileMenuOpen(false)}
+              className="text-accent underline"
+            >
+              Close
+            </button>
+          </div>
         </div>
       )}
     </header>
