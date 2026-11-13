@@ -1,0 +1,100 @@
+[
+  {
+    "slug": "codelens",
+    "title": "CodeLens",
+    "tagline": "Repository Intelligence Platform",
+    "category": "developer-tools",
+    "featured": true,
+    "status": "in-progress",
+    "summary": "AST-based source code analysis, dependency exploration, and codebase architecture visualization.",
+    "metrics": {
+      "nodes": 1468,
+      "edges": 2760,
+      "communities": 138
+    },
+    "technologies": ["TypeScript", "Node.js", "AST", "Graph Analysis", "React"],
+    "highlights": [
+      "Engineered an AST-based source code parser to extract module relationships and syntactic structures.",
+      "Analyzed an extensive repository graph containing 1,468 nodes, 2,760 edges, and 138 detected communities.",
+      "Integrated repository-grounded AI documentation with deterministic-first analysis workflows."
+    ],
+    "links": {
+      "github": "https://github.com/koushikkar712/CodeLens",
+      "demo": null
+    },
+    "observatoryCoordinates": {
+      "sector": "RA 04h 35m",
+      "magnitude": "1.2"
+    }
+  },
+  {
+    "slug": "ludo-neo",
+    "title": "Ludo Neo",
+    "tagline": "Real-Time Multiplayer Game Engine",
+    "category": "real-time-systems",
+    "featured": true,
+    "status": "completed",
+    "summary": "Synchronized multiplayer board game featuring real-time matchmaking, bot integration, and sub-millisecond state persistence.",
+    "technologies": ["Node.js", "Socket.IO", "Redis", "RedisJSON", "React"],
+    "highlights": [
+      "Engineered bidirectional Socket.IO communication to transmit player turns and propagate state in real time.",
+      "Implemented automated matchmaking and algorithmic bot fallbacks for low-latency lobbies.",
+      "Integrated Redis and RedisJSON for atomic game-state storage, retrieval, and session recovery."
+    ],
+    "links": {
+      "github": "https://github.com/koushikkar712/Ludo-Neo",
+      "demo": null
+    },
+    "observatoryCoordinates": {
+      "sector": "RA 07h 12m",
+      "magnitude": "2.4"
+    }
+  },
+  {
+    "slug": "algovisuals",
+    "title": "AlgoVisuals",
+    "tagline": "Interactive Algorithm Visualization Platform",
+    "category": "algorithms",
+    "featured": true,
+    "status": "completed",
+    "summary": "Interactive visualizer illustrating execution flow, traversal order, and structural transformations across algorithms.",
+    "technologies": ["React", "JavaScript", "Data Structures", "Tailwind CSS"],
+    "highlights": [
+      "Visualized sorting, searching, binary tree operations, and graph traversal algorithms.",
+      "Decoupled pure algorithm execution steps from UI animation loops for deterministic frame playback.",
+      "Engineered modular React components representing complex intermediate data structure states."
+    ],
+    "links": {
+      "github": "https://github.com/koushikkar712/AlgoVisuals",
+      "demo": null
+    },
+    "observatoryCoordinates": {
+      "sector": "RA 11h 45m",
+      "magnitude": "3.1"
+    }
+  },
+  {
+    "slug": "remidos",
+    "title": "Remidos",
+    "tagline": "Full-Stack Task Management Workspace",
+    "category": "web-applications",
+    "featured": false,
+    "status": "completed",
+    "summary": "Cloud-backed task management platform featuring structured CRUD workflows, REST API integration, and cloud persistence.",
+    "technologies": ["React", "Node.js", "Express.js", "MongoDB Atlas", "Render"],
+    "highlights": [
+      "Developed responsive client workflows integrated with Express.js REST endpoints.",
+      "Engineered schema models in MongoDB Atlas for persistent cloud data storage.",
+      "Configured automated deployment pipelines on Render."
+    ],
+    "links": {
+      "github": "https://github.com/koushikkar712/Remidos",
+      "demo": null
+    },
+    "observatoryCoordinates": {
+      "sector": "RA 16h 20m",
+      "magnitude": "4.0"
+    }
+  }
+]
+

@@ -1,0 +1,50 @@
+[
+  {
+    "id": "languages",
+    "title": "Languages & Systems",
+    "skills": [
+      { "name": "C++", "proficiency": "strong", "highlight": true },
+      { "name": "TypeScript", "proficiency": "strong", "highlight": true },
+      { "name": "JavaScript", "proficiency": "strong", "highlight": true },
+      { "name": "Python", "proficiency": "working", "highlight": false },
+      { "name": "C", "proficiency": "working", "highlight": false }
+    ]
+  },
+  {
+    "id": "cs-core",
+    "title": "Computer Science Core",
+    "skills": [
+      { "name": "Data Structures & Algorithms", "proficiency": "strong", "highlight": true },
+      { "name": "Object-Oriented Design", "proficiency": "strong", "highlight": true },
+      { "name": "Complexity Analysis", "proficiency": "strong", "highlight": true },
+      { "name": "Operating Systems", "proficiency": "working", "highlight": false },
+      { "name": "DBMS", "proficiency": "working", "highlight": false },
+      { "name": "Computer Networks", "proficiency": "working", "highlight": false }
+    ]
+  },
+  {
+    "id": "backend",
+    "title": "Backend & Real-Time",
+    "skills": [
+      { "name": "Node.js", "proficiency": "strong", "highlight": true },
+      { "name": "Express.js", "proficiency": "strong", "highlight": true },
+      { "name": "Socket.IO", "proficiency": "strong", "highlight": true },
+      { "name": "REST APIs", "proficiency": "strong", "highlight": true },
+      { "name": "Redis / RedisJSON", "proficiency": "working", "highlight": true },
+      { "name": "MongoDB / Atlas", "proficiency": "working", "highlight": false }
+    ]
+  },
+  {
+    "id": "frontend",
+    "title": "Frontend & Engineering Tools",
+    "skills": [
+      { "name": "React.js", "proficiency": "strong", "highlight": true },
+      { "name": "Next.js", "proficiency": "working", "highlight": true },
+      { "name": "Tailwind CSS", "proficiency": "strong", "highlight": true },
+      { "name": "HTML5 / CSS3", "proficiency": "strong", "highlight": false },
+      { "name": "Git / GitHub", "proficiency": "strong", "highlight": true },
+      { "name": "Render / Vercel", "proficiency": "working", "highlight": false }
+    ]
+  }
+]
+

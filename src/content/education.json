@@ -1,0 +1,25 @@
+[
+  {
+    "institution": "National Institute of Technology, Agartala",
+    "degree": "B.Tech.",
+    "field": "Electronics and Communication Engineering",
+    "period": "2024 – Present",
+    "cgpa": "8.55",
+    "location": "Agartala, Tripura, India",
+    "highlights": [
+      "Rigorous foundation in computer architecture, discrete mathematics, and systems logic.",
+      "Maintaining an 8.55 CGPA while actively building developer tools and real-time distributed software."
+    ]
+  },
+  {
+    "institution": "Serampore Union Institution",
+    "degree": "Higher Secondary Education (XII)",
+    "field": "Science Stream",
+    "period": "2022 – 2024",
+    "location": "Serampore, West Bengal, India",
+    "highlights": [
+      "Specialized in Physics, Chemistry, and Mathematics."
+    ]
+  }
+]
+
