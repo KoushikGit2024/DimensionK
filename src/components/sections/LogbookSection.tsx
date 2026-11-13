@@ -1,17 +1,29 @@
-import React from "react";
+"use client";
+
+import React, { useRef } from "react";
 import { Container } from "@/components/layout/Container";
 import { SectionHeading } from "@/components/ui/SectionHeading";
-import { Card } from "@/components/ui/Card";
-import { Reveal } from "@/components/ui/Reveal";
 import { TelemetryStamp } from "@/components/ui/TelemetryStamp";
 import { EducationEntry } from "@/schemas/content";
-import { GraduationCap, MapPin } from "lucide-react";
+import { motion, useScroll, useTransform, useReducedMotion } from "motion/react";
+import { MapPin } from "lucide-react";
 
 interface LogbookSectionProps {
   education: EducationEntry[];
 }
 
 export const LogbookSection: React.FC<LogbookSectionProps> = ({ education }) => {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const reduce = useReducedMotion();
+
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start 0.8", "end 0.5"],
+  });
+
+  const lineHeight = useTransform(scrollYProgress, [0, 1], ["0%", "100%"]);
+  const cgpaValue = education.find((e) => e.cgpa)?.cgpa;
+
   return (
     <section
       id="logbook"
@@ -19,76 +31,85 @@ export const LogbookSection: React.FC<LogbookSectionProps> = ({ education }) => 
     >
       <Container size="wide">
         <SectionHeading
-          index="05"
+          index="04"
           eyebrow="Chronology & Academic Base"
           title="Education & Engineering Logbook"
           description="Formal academic track providing foundational grounding in computer architecture, digital logic, discrete mathematics, and systems engineering."
           rightMeta={
-            <TelemetryStamp
-              label="CGPA INDEX"
-              value={`${education.find((e) => e.cgpa)?.cgpa ?? "8.55"} / 10.0`}
-            />
+            cgpaValue ? (
+              <TelemetryStamp
+                label="CGPA INDEX"
+                value={`${cgpaValue} / 10.0`}
+              />
+            ) : null
           }
         />
 
-        <div className="relative pl-4 sm:pl-8 border-l border-white/[0.12] space-y-8 max-w-5xl">
-          {education.map((item, idx) => (
-            <Reveal key={item.institution} delay={idx * 0.08}>
-              <div className="relative">
-                {/* Meridian Timeline Node */}
+        <div ref={containerRef} className="relative mt-16 max-w-4xl pl-6 sm:pl-10">
+          {/* Background track line */}
+          <div
+            aria-hidden="true"
+            className="absolute left-0 top-3 bottom-3 w-[1px] bg-white/[0.1]"
+          />
+
+          {/* Self-drawing active timeline line */}
+          <motion.div
+            aria-hidden="true"
+            className="absolute left-0 top-3 w-[2px] -ml-[0.5px] bg-gradient-to-b from-accent via-accent to-warm origin-top"
+            style={{ height: reduce ? "100%" : lineHeight }}
+          />
+
+          <div className="space-y-16">
+            {education.map((item, idx) => (
+              <div key={item.institution} className="relative group">
+                {/* Timeline Node that transitions from cyan to ember */}
                 <div
                   aria-hidden="true"
-                  className="absolute -left-[21px] sm:-left-[37px] top-6 w-2.5 h-2.5 rounded-full bg-void border-2 border-accent shadow-[0_0_10px_rgba(56,242,230,0.7)]"
+                  className="absolute -left-[29px] sm:-left-[45px] top-1.5 w-3 h-3 rounded-full bg-surface border-2 border-accent group-hover:border-warm transition-colors shadow-[0_0_10px_rgba(56,242,230,0.5)]"
                 />
 
-                <Card className="space-y-4">
-                  <div className="flex flex-wrap items-center justify-between gap-2 pb-3 border-b border-white/[0.07] font-mono text-xs">
-                    <div className="flex items-center gap-2 text-accent font-medium uppercase tracking-wider">
-                      <GraduationCap className="w-4 h-4" />
-                      <span>{item.period}</span>
-                    </div>
+                <div className="space-y-3">
+                  <div className="flex flex-wrap items-center gap-3 font-mono text-xs">
+                    <span className="text-warm font-semibold tracking-wider">
+                      {item.period}
+                    </span>
                     {item.cgpa && (
-                      <span className="px-2.5 py-0.5 rounded-xs bg-accent/12 border border-accent/35 text-accent font-medium">
+                      <span className="px-2 py-0.5 rounded-xs bg-accent/10 border border-accent/30 text-accent font-medium">
                         CGPA: {item.cgpa}
                       </span>
                     )}
+                    <span className="inline-flex items-center gap-1 text-text-dim ml-auto">
+                      <MapPin className="w-3 h-3 text-accent" />
+                      {item.location}
+                    </span>
                   </div>
 
-                  <div className="space-y-1">
-                    <h3 className="text-xl sm:text-2xl font-normal text-white tracking-tight">
-                      {item.degree} — {item.field}
+                  <div>
+                    <h3 className="font-display text-2xl sm:text-3xl lg:text-4xl text-text font-normal">
+                      {item.institution}
                     </h3>
-                    <div className="flex flex-wrap items-center gap-2 text-xs font-mono text-text-muted">
-                      <span className="text-text-secondary font-medium">
-                        {item.institution}
-                      </span>
-                      <span>•</span>
-                      <span className="inline-flex items-center gap-1 text-text-dim">
-                        <MapPin className="w-3 h-3 text-accent" />
-                        {item.location}
-                      </span>
-                    </div>
+                    <p className="font-sans text-base sm:text-lg text-text-secondary mt-1">
+                      {item.degree} — <span className="text-text">{item.field}</span>
+                    </p>
                   </div>
 
                   {item.highlights && item.highlights.length > 0 && (
-                    <ul className="pt-2 space-y-2 border-t border-white/[0.05]">
+                    <ul className="pt-3 space-y-2 max-w-2xl">
                       {item.highlights.map((h, hIdx) => (
                         <li
                           key={hIdx}
-                          className="text-xs sm:text-sm text-text-secondary leading-relaxed flex items-start gap-2.5"
+                          className="text-sm text-text-secondary leading-relaxed flex items-start gap-2.5"
                         >
-                          <span className="font-mono text-xs text-accent mt-0.5">
-                            ::
-                          </span>
+                          <span className="font-mono text-xs text-accent mt-0.5">&bull;</span>
                           <span>{h}</span>
                         </li>
                       ))}
                     </ul>
                   )}
-                </Card>
+                </div>
               </div>
-            </Reveal>
-          ))}
+            ))}
+          </div>
         </div>
       </Container>
     </section>
