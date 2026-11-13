@@ -11,7 +11,7 @@ import { ScrollReadText } from "@/components/ui/ScrollReadText";
 import { HeroSection } from "@/components/sections/HeroSection";
 import { SelectedProjectsSection } from "@/components/sections/SelectedProjectsSection";
 import { CapabilitiesSection } from "@/components/sections/CapabilitiesSection";
-import { ArchitecturePhilosophySection } from "@/components/sections/ArchitecturePhilosophySection";
+import { MethodologySection } from "@/components/sections/methodology/MethodologySection";
 import { LogbookSection } from "@/components/sections/LogbookSection";
 import { ContactSection } from "@/components/sections/ContactSection";
 import { ObservatoryCursor } from "@/components/visual/ObservatoryCursor";
@@ -46,7 +46,7 @@ export default function Home() {
 
         <SelectedProjectsSection projects={projects} />
         <CapabilitiesSection categories={skills} projects={projects} />
-        <ArchitecturePhilosophySection />
+        <MethodologySection />
         <LogbookSection education={education} />
         <ContactSection email={profile.email} links={profile.links} />
       </main>
