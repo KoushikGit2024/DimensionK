@@ -5,24 +5,15 @@ import dynamic from "next/dynamic";
 import { useFrame } from "@react-three/fiber";
 import * as THREE from "three";
 import { GalacticCore } from "./GalacticCore";
-import { CelestialSphere } from "./CelestialSphere";
 import { Starfield } from "./Starfield";
-
-export type InstrumentSceneMode = "core" | "astrolabe" | "schematic";
-
-interface ObservatoryVisualEngineProps {
-  mode?: InstrumentSceneMode;
-}
 
 interface InteractiveRigProps {
   deviceTier: "desktop" | "tablet" | "mobile";
-  mode: "core" | "astrolabe";
   pointerRef: React.RefObject<{ x: number; y: number }>;
 }
 
 const InteractiveSceneRig: React.FC<InteractiveRigProps> = ({
   deviceTier,
-  mode,
   pointerRef,
 }) => {
   const groupRef = useRef<THREE.Group>(null);
@@ -56,19 +47,15 @@ const InteractiveSceneRig: React.FC<InteractiveRigProps> = ({
       position={[baseOffsetX, 0, 0]}
       scale={[baseScale, baseScale, baseScale]}
     >
-      {mode === "core" ? (
-        <GalacticCore
-          particleCount={
-            deviceTier === "desktop"
-              ? 6800
-              : deviceTier === "tablet"
-              ? 3600
-              : 1800
-          }
-        />
-      ) : (
-        <CelestialSphere />
-      )}
+      <GalacticCore
+        particleCount={
+          deviceTier === "desktop"
+            ? 7200
+            : deviceTier === "tablet"
+            ? 3600
+            : 1800
+        }
+      />
     </group>
   );
 };
@@ -103,9 +90,7 @@ const DynamicCanvas = dynamic(
   { ssr: false }
 );
 
-export const ObservatoryVisualEngine: React.FC<ObservatoryVisualEngineProps> = ({
-  mode = "core",
-}) => {
+export const ObservatoryVisualEngine: React.FC = () => {
   const containerRef = useRef<HTMLDivElement>(null);
   const pointerRef = useRef<{ x: number; y: number }>({ x: 0, y: 0 });
 
@@ -115,16 +100,24 @@ export const ObservatoryVisualEngine: React.FC<ObservatoryVisualEngineProps> = (
   const [inViewport, setInViewport] = useState(true);
   const [pageVisible, setPageVisible] = useState(true);
   const [reducedMotion, setReducedMotion] = useState(false);
+  const [isSlowNetwork, setIsSlowNetwork] = useState(false);
 
   useEffect(() => {
+    // Detect prefers-reduced-motion
     const motionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
     setReducedMotion(motionQuery.matches);
-
-    const handleMotionChange = (e: MediaQueryListEvent) => {
-      setReducedMotion(e.matches);
-    };
+    const handleMotionChange = (e: MediaQueryListEvent) => setReducedMotion(e.matches);
     motionQuery.addEventListener("change", handleMotionChange);
 
+    // Detect slow network connection (Save-Data or 2g)
+    if ("connection" in navigator) {
+      const conn = (navigator as unknown as { connection?: { saveData?: boolean; effectiveType?: string } }).connection;
+      if (conn?.saveData || conn?.effectiveType === "2g" || conn?.effectiveType === "slow-2g") {
+        setIsSlowNetwork(true);
+      }
+    }
+
+    // Evaluate device tier & touch characteristics
     const evaluateDevice = () => {
       const width = window.innerWidth;
       const isTouch = window.matchMedia("(pointer: coarse)").matches;
@@ -146,17 +139,13 @@ export const ObservatoryVisualEngine: React.FC<ObservatoryVisualEngineProps> = (
     };
     window.addEventListener("mousemove", handleMouseMove, { passive: true });
 
-    const handleVisibility = () => {
-      setPageVisible(!document.hidden);
-    };
+    const handleVisibility = () => setPageVisible(!document.hidden);
     document.addEventListener("visibilitychange", handleVisibility);
 
     let observer: IntersectionObserver | null = null;
     if (containerRef.current && "IntersectionObserver" in window) {
       observer = new IntersectionObserver(
-        ([entry]) => {
-          setInViewport(entry.isIntersecting);
-        },
+        ([entry]) => setInViewport(entry.isIntersecting),
         { threshold: 0.05 }
       );
       observer.observe(containerRef.current);
@@ -171,8 +160,9 @@ export const ObservatoryVisualEngine: React.FC<ObservatoryVisualEngineProps> = (
     };
   }, []);
 
-  const showSchematicFallback =
-    mode === "schematic" || reducedMotion || deviceTier === null;
+  // Use pure zero-GPU schematic fallback if user prefers reduced motion or is on slow network
+  const useSchematicOnly = reducedMotion || isSlowNetwork;
+  const isCanvasActive = inViewport && pageVisible && !reducedMotion;
 
   return (
     <div
@@ -180,10 +170,10 @@ export const ObservatoryVisualEngine: React.FC<ObservatoryVisualEngineProps> = (
       aria-hidden="true"
       className="absolute inset-0 pointer-events-none select-none z-0 overflow-hidden"
     >
-      {/* Precision Optical Astrolabe SVG Layer (Always provides instant LCP & non-WebGL / reduced-motion fallback) */}
+      {/* Precision Optical Astrolabe SVG Layer (subtle backdrop geometry) */}
       <div
         className={`absolute inset-0 flex items-center justify-center lg:justify-end lg:pr-[8%] transition-opacity duration-700 ${
-          showSchematicFallback ? "opacity-90" : "opacity-25"
+          useSchematicOnly ? "opacity-90" : "opacity-25"
         }`}
       >
         <svg
@@ -254,28 +244,16 @@ export const ObservatoryVisualEngine: React.FC<ObservatoryVisualEngineProps> = (
             strokeOpacity="0.12"
             strokeWidth="1"
           />
-          <circle cx="300" cy="300" r="6" fill="currentColor" fillOpacity="0.8" />
-          <circle cx="486" cy="218" r="4" fill="#38f2e6" />
-          <circle cx="155" cy="364" r="3.5" fill="#f59e0b" />
         </svg>
       </div>
 
-      {/* Adaptive WebGL Scene */}
-      {!showSchematicFallback && deviceTier !== null && (
-        <DynamicCanvas active={inViewport && pageVisible && !reducedMotion}>
-          <ambientLight intensity={0.45} />
-          <Starfield
-            count={
-              deviceTier === "desktop"
-                ? 1600
-                : deviceTier === "tablet"
-                ? 1000
-                : 520
-            }
-          />
+      {/* 3D WebGL Canvas Layer (intelligently scaled by device tier) */}
+      {!useSchematicOnly && deviceTier !== null && (
+        <DynamicCanvas active={isCanvasActive}>
+          <ambientLight intensity={0.4} />
+          <Starfield count={deviceTier === "mobile" ? 450 : deviceTier === "tablet" ? 950 : 1800} />
           <InteractiveSceneRig
             deviceTier={deviceTier}
-            mode={mode === "astrolabe" ? "astrolabe" : "core"}
             pointerRef={pointerRef}
           />
         </DynamicCanvas>

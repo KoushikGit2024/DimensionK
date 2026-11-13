@@ -1,35 +1,21 @@
 "use client";
 
-import React, { useRef, useState } from "react";
+import React, { useRef } from "react";
 import { motion, useReducedMotion, useScroll, useTransform } from "motion/react";
 import { Container } from "@/components/layout/Container";
 import { Profile } from "@/schemas/content";
-import {
-  ObservatoryVisualEngine,
-  type InstrumentSceneMode,
-} from "@/visual-engine/ObservatoryVisualEngine";
+import { ObservatoryVisualEngine } from "@/visual-engine/ObservatoryVisualEngine";
 import { ObservatoryGridOverlay } from "@/components/visual/ObservatoryGridOverlay";
 import { buttonStyles } from "@/components/ui/Button";
 import { Magnetic } from "@/components/ui/Magnetic";
 import { TelemetryStamp } from "@/components/ui/TelemetryStamp";
-import { ArrowDown, Send, Compass, Orbit, Eye } from "lucide-react";
+import { ArrowDown, Send, Orbit, Eye } from "lucide-react";
 
 interface HeroSectionProps {
   profile: Profile;
 }
 
-const SCENE_MODES: {
-  id: InstrumentSceneMode;
-  label: string;
-  shortLabel: string;
-}[] = [
-  { id: "core", label: "Accretion Core", shortLabel: "Core" },
-  { id: "astrolabe", label: "Celestial Sphere", shortLabel: "Sphere" },
-  { id: "schematic", label: "Optical Schematic", shortLabel: "Optical" },
-];
-
 export const HeroSection: React.FC<HeroSectionProps> = ({ profile }) => {
-  const [sceneMode, setSceneMode] = useState<InstrumentSceneMode>("core");
   const heroRef = useRef<HTMLElement>(null);
   const reduce = useReducedMotion();
   const { scrollYProgress } = useScroll({
@@ -51,13 +37,13 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ profile }) => {
 
       {/* Adaptive 3D Deep-Space & Astrometric Instrument Engine with scroll parallax */}
       <motion.div className="absolute inset-0" style={{ y: sceneY, opacity: sceneOpacity }}>
-        <ObservatoryVisualEngine mode={sceneMode} />
+        <ObservatoryVisualEngine />
       </motion.div>
 
       <Container size="wide" className="relative z-10 w-full my-auto py-8 lg:py-12">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-center">
           {/* Editorial Left Column */}
-          <div className="lg:col-span-7 space-y-6">
+          <div className="lg:col-span-8 space-y-6">
             <div className="flex flex-wrap items-center gap-2.5">
               <TelemetryStamp label="STATION" value={profile.coordinates} />
               <TelemetryStamp label="LOC" value={profile.location} />
@@ -101,55 +87,8 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ profile }) => {
             </div>
           </div>
 
-          {/* Right Spatial Instrument Control Column */}
-          <div className="lg:col-span-5 flex flex-col justify-end lg:min-h-[420px]">
-            <div className="mt-auto lg:ml-auto w-full max-w-sm">
-              <div className="p-4 rounded-md border border-white/[0.09] bg-surface/80 backdrop-blur-md space-y-3">
-                <div className="flex items-center justify-between text-[11px] font-mono text-text-muted border-b border-white/[0.06] pb-2">
-                  <span className="flex items-center gap-1.5 uppercase tracking-wider">
-                    <Compass className="w-3.5 h-3.5 text-accent" />
-                    <span>Instrument Optics</span>
-                  </span>
-                  <span className="text-accent uppercase">{sceneMode}</span>
-                </div>
-
-                <div
-                  role="group"
-                  aria-label="Select observatory visual instrument mode"
-                  className="grid grid-cols-3 gap-1.5"
-                >
-                  {SCENE_MODES.map((m) => {
-                    const active = sceneMode === m.id;
-                    return (
-                      <button
-                        key={m.id}
-                        type="button"
-                        onClick={() => setSceneMode(m.id)}
-                        aria-pressed={active}
-                        className={`px-2.5 py-1.5 rounded-xs font-mono text-[11px] uppercase tracking-wider transition-all cursor-pointer border ${
-                          active
-                            ? "bg-accent/15 border-accent text-accent font-medium"
-                            : "bg-white/[0.02] border-white/[0.07] text-text-muted hover:text-white hover:border-white/20"
-                        }`}
-                      >
-                        <span className="hidden sm:inline">{m.label.split(" ")[0]}</span>
-                        <span className="sm:hidden">{m.shortLabel}</span>
-                      </button>
-                    );
-                  })}
-                </div>
-
-                <p className="font-mono text-[11px] text-text-dim leading-relaxed">
-                  {sceneMode === "core" &&
-                    "Relativistic 3-arm logarithmic accretion disk with thermal spectral gradient."}
-                  {sceneMode === "astrolabe" &&
-                    "Geodesic meridian sphere with 3 inclined satellite ephemeris tracks."}
-                  {sceneMode === "schematic" &&
-                    "Zero-GPU static optical astrolabe calibration schematic."}
-                </p>
-              </div>
-            </div>
-          </div>
+          {/* Right Spatial Depth Anchor (3D Galaxy sits here) */}
+          <div className="hidden lg:block lg:col-span-4 h-[420px] pointer-events-none" />
         </div>
       </Container>
 
