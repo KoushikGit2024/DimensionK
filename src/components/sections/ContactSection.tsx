@@ -7,7 +7,8 @@ import { buttonStyles } from "@/components/ui/Button";
 import { Magnetic } from "@/components/ui/Magnetic";
 import { Card } from "@/components/ui/Card";
 import { ExternalLink } from "@/schemas/content";
-import { Copy, Check, ArrowUpRight, Send, Clock } from "lucide-react";
+import { EmailEditorModal } from "@/components/contact/EmailEditorModal";
+import { Send, Clock, ArrowUpRight, MessageSquareCode, ShieldCheck } from "lucide-react";
 
 interface ContactSectionProps {
   email: string;
@@ -33,10 +34,9 @@ const TRANSMISSION_TOPICS = [
 ];
 
 export const ContactSection: React.FC<ContactSectionProps> = ({
-  email,
   links,
 }) => {
-  const [copied, setCopied] = useState(false);
+  const [isEditorOpen, setIsEditorOpen] = useState(false);
   const [selectedTopic, setSelectedTopic] = useState(TRANSMISSION_TOPICS[0]);
   const [localTime, setLocalTime] = useState<string>("");
 
@@ -60,24 +60,6 @@ export const ContactSection: React.FC<ContactSectionProps> = ({
     return () => clearInterval(interval);
   }, []);
 
-  const handleCopy = async () => {
-    try {
-      if (navigator.clipboard && navigator.clipboard.writeText) {
-        await navigator.clipboard.writeText(email);
-        setCopied(true);
-        setTimeout(() => setCopied(false), 2500);
-      } else {
-        throw new Error("Clipboard API unavailable");
-      }
-    } catch {
-      window.prompt("Copy email address with Ctrl+C:", email);
-    }
-  };
-
-  const mailtoHref = `mailto:${email}?subject=${encodeURIComponent(
-    selectedTopic.subject
-  )}`;
-
   return (
     <section id="contact" className="py-24 lg:py-32">
       <Container size="wide">
@@ -89,13 +71,14 @@ export const ContactSection: React.FC<ContactSectionProps> = ({
         />
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 mt-12">
-          {/* Left Primary Moment */}
+          {/* Left Primary Transmission Channel */}
           <div className="lg:col-span-7">
             <Card className="h-full justify-between space-y-8 p-8 border-white/[0.1] bg-surface/80">
               <div className="space-y-6">
                 <div className="flex items-center justify-between border-b border-white/[0.07] pb-4 font-mono text-xs">
-                  <span className="text-warm uppercase tracking-wider font-semibold">
-                    // DIRECT TRANSMISSION CHANNEL
+                  <span className="text-warm uppercase tracking-wider font-semibold flex items-center gap-2">
+                    <span className="w-2 h-2 rounded-full bg-accent animate-pulse" />
+                    <span>DIRECT DISPATCH INTERFACE</span>
                   </span>
                   {localTime && (
                     <span className="flex items-center gap-1.5 text-text-muted">
@@ -111,48 +94,45 @@ export const ContactSection: React.FC<ContactSectionProps> = ({
                     <em className="italic text-warm">invariants</em>.
                   </h3>
                   <p className="text-text-secondary text-sm sm:text-base leading-relaxed">
-                    Have a technical opening, an architecture question, or an open-source collaboration idea? Reach out directly.
+                    Have an engineering opportunity, an architectural question, or an open-source collaboration idea? Click below to compose and transmit a secure message directly to my station inbox.
                   </p>
                 </div>
 
-                {/* Email Display & Copy */}
-                <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4 p-5 bg-surface-raised border border-white/[0.08] rounded-md">
-                  <a
-                    href={mailtoHref}
-                    className="font-display text-2xl sm:text-3xl text-text hover:text-warm link-draw truncate"
-                  >
-                    {email}
-                  </a>
+                {/* Secure Message Trigger Box (Email address is kept completely private) */}
+                <div
+                  onClick={() => setIsEditorOpen(true)}
+                  className="p-5 bg-surface-raised border border-white/[0.08] hover:border-warm/60 rounded-lg cursor-pointer transition-all group flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 shadow-[0_0_24px_rgba(0,0,0,0.4)]"
+                  role="button"
+                  tabIndex={0}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" || e.key === " ") setIsEditorOpen(true);
+                  }}
+                  aria-label="Open secure email editor modal"
+                >
+                  <div className="flex items-center gap-3.5 min-w-0">
+                    <div className="w-10 h-10 rounded-md bg-warm/10 border border-warm/30 flex items-center justify-center shrink-0 text-warm group-hover:scale-105 transition-transform">
+                      <MessageSquareCode className="w-5 h-5" />
+                    </div>
+                    <div className="space-y-0.5 truncate">
+                      <div className="font-display text-lg sm:text-xl text-text group-hover:text-warm transition-colors truncate">
+                        Compose Transmission
+                      </div>
+                      <div className="font-mono text-xs text-text-dim flex items-center gap-2">
+                        <ShieldCheck className="w-3 h-3 text-accent" />
+                        <span>Direct Inbox Delivery &bull; Zero Spam Exposure</span>
+                      </div>
+                    </div>
+                  </div>
 
-                  <button
-                    type="button"
-                    onClick={handleCopy}
-                    data-cursor="Copy"
-                    className="inline-flex items-center justify-center gap-2 px-4 py-2 text-xs font-mono rounded bg-white/[0.04] border border-white/10 hover:border-warm text-text-muted hover:text-warm transition-all cursor-pointer shrink-0"
-                    aria-label="Copy email address"
-                  >
-                    {copied ? (
-                      <>
-                        <Check className="w-3.5 h-3.5 text-warm" />
-                        <span className="text-warm font-medium">Copied</span>
-                      </>
-                    ) : (
-                      <>
-                        <Copy className="w-3.5 h-3.5" />
-                        <span>Copy</span>
-                      </>
-                    )}
-                  </button>
-                </div>
-
-                <div aria-live="polite" className="sr-only">
-                  {copied ? "Email address copied to clipboard" : ""}
+                  <span className="px-3 py-1.5 rounded bg-white/[0.04] border border-white/10 group-hover:border-warm group-hover:text-warm font-mono text-xs text-text-muted transition-colors shrink-0">
+                    Open Editor &rarr;
+                  </span>
                 </div>
 
                 {/* Subject Presets */}
                 <div className="space-y-3 pt-2">
                   <span className="font-mono text-xs uppercase tracking-wider text-text-dim block">
-                    Select Subject Preset
+                    Choose Transmission Protocol Preset
                   </span>
                   <div
                     role="radiogroup"
@@ -188,16 +168,17 @@ export const ContactSection: React.FC<ContactSectionProps> = ({
 
               <div className="pt-6 border-t border-white/[0.07] flex flex-wrap items-center justify-between gap-4">
                 <span className="font-mono text-xs text-text-dim truncate max-w-xs sm:max-w-md">
-                  SUBJECT: {selectedTopic.subject}
+                  PROTOCOL: {selectedTopic.subject}
                 </span>
                 <Magnetic>
-                  <a
-                    href={mailtoHref}
+                  <button
+                    type="button"
+                    onClick={() => setIsEditorOpen(true)}
                     className={buttonStyles("primary", "md")}
                   >
                     <Send className="w-3.5 h-3.5 text-accent" />
-                    <span>Launch Mail Client</span>
-                  </a>
+                    <span>Open Transmission Editor</span>
+                  </button>
                 </Magnetic>
               </div>
             </Card>
@@ -243,6 +224,13 @@ export const ContactSection: React.FC<ContactSectionProps> = ({
           </div>
         </div>
       </Container>
+
+      {/* Interactive Email Composition Modal */}
+      <EmailEditorModal
+        isOpen={isEditorOpen}
+        onClose={() => setIsEditorOpen(false)}
+        defaultSubject={selectedTopic.subject}
+      />
     </section>
   );
 };
