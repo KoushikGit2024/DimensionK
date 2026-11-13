@@ -54,6 +54,8 @@ export const ProjectSchema = z.object({
   highlights: z.array(z.string()).optional(),
   story: ProjectStorySchema.optional(),
   previewImage: z.string().nullable().optional(),
+  previewUrl: z.string().url().nullable().optional(),
+  pageUrl: z.string().nullable().optional(),
   links: z.object({
     github: z.string().url().nullable().optional(),
     demo: z.string().url().nullable().optional(),

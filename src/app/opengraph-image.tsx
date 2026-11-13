@@ -40,7 +40,7 @@ export default function OG() {
               fontFamily: "monospace",
             }}
           >
-            22.75°N // AGARTALA
+            SERAMPORE
           </div>
         </div>
 

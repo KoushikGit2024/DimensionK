@@ -5,7 +5,9 @@ export async function generateMetadata(): Promise<Metadata> {
   const profile = getProfile();
 
   return {
-    metadataBase: new URL("https://koushikkar.dev"),
+    metadataBase: new URL(
+      process.env.NEXT_PUBLIC_SITE_URL || "https://github.com/KoushikGit2024"
+    ),
     title: {
       default: `${profile.displayName} — ${profile.headline}`,
       template: `%s | ${profile.displayName}`,
@@ -26,8 +28,8 @@ export async function generateMetadata(): Promise<Metadata> {
     openGraph: {
       title: `${profile.displayName} — ${profile.headline}`,
       description: profile.summary,
-      url: "https://koushikkar.dev",
-      siteName: `${profile.displayName} Observatory`,
+      url: "https://github.com/KoushikGit2024",
+      siteName: `${profile.displayName} Portfolio`,
       locale: "en_US",
       type: "website",
     },
@@ -35,7 +37,6 @@ export async function generateMetadata(): Promise<Metadata> {
       card: "summary_large_image",
       title: `${profile.displayName} — ${profile.headline}`,
       description: profile.summary,
-      creator: "@koushikkar",
     },
     robots: {
       index: true,

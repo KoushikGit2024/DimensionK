@@ -1,8 +1,8 @@
 {
   "displayName": "Koushik Kar",
-  "headline": "Software Engineer & Systems Developer",
-  "summary": "Engineering developer tools, AST code intelligence, real-time networking, and scalable full-stack architectures. Undergraduate at NIT Agartala with deep roots in algorithms and systems thinking.",
-  "statement": "I study electronics, but I keep getting pulled toward software, toward the part where a system either holds its invariants or doesn't. I build tools that read code, engines that keep players in sync, and visualizers that make algorithms slow enough to see. I would rather ship something small that is correct than something large that is vague.",
+  "headline": "Software Developer & System Engineer",
+  "summary": "Software Developer crafting thoughtful digital experiences, building scalable web applications, and exploring the intersection of software engineering, intelligent systems, and technology.",
+  "statement": "My foundation is in electronics, but my curiosity lies at the intersection of software, systems, and engineering. I'm drawn to the details that make software dependable — the invariants, the edge cases, and the logic that holds everything together. From developer tools and real-time systems to algorithm visualizers, I build things to understand how they work, not just how they look. I value precision over complexity, working systems over impressive claims, and thoughtful execution over unnecessary scale.",
   "location": "Serampore, West Bengal, India",
   "coordinates": "22.75° N, 88.34° E",
   "email": "koushikkar712@gmail.com",
@@ -14,7 +14,7 @@
     },
     {
       "label": "LinkedIn",
-      "href": "https://linkedin.com/in/koushik-kar-712",
+      "href": "https://www.linkedin.com/in/koushik-kar-409489329",
       "kind": "professional"
     }
   ]

@@ -88,9 +88,9 @@ export const EmailEditorModal: React.FC<EmailEditorModalProps> = ({
         {/* Editor Window Header */}
         <div className="px-5 py-3.5 bg-surface border-b border-white/[0.08] flex items-center justify-between font-mono text-xs">
           <div className="flex items-center gap-2">
-            <span className="w-2.5 h-2.5 rounded-full bg-accent animate-pulse" />
+            <span className="w-2.5 h-2.5 rounded-full bg-accent" />
             <span className="text-text font-semibold uppercase tracking-wider">
-              ENCRYPTED TRANSMISSION EDITOR
+              MESSAGE COMPOSER
             </span>
           </div>
 
@@ -107,15 +107,15 @@ export const EmailEditorModal: React.FC<EmailEditorModalProps> = ({
         {/* Form Body */}
         {status === "success" ? (
           <div className="p-10 text-center space-y-4">
-            <CheckCircle2 className="w-12 h-12 text-warm mx-auto animate-bounce" />
+            <CheckCircle2 className="w-12 h-12 text-warm mx-auto" />
             <h3 className="font-display text-3xl text-text font-normal">
-              Transmission Delivered
+              Message Delivered
             </h3>
             <p className="font-sans text-sm text-text-secondary max-w-md mx-auto">
-              Your message has been verified and securely routed to Koushik&apos;s personal inbox. You will receive an acknowledgment return signal shortly.
+              Your message has been sent directly to Koushik&apos;s personal inbox.
             </p>
             <div className="font-mono text-xs text-text-dim pt-4">
-              WINDOW CLOSING AUTOMATICALLY...
+              CLOSING WINDOW...
             </div>
           </div>
         ) : (
@@ -198,7 +198,7 @@ export const EmailEditorModal: React.FC<EmailEditorModalProps> = ({
             <div className="pt-3 border-t border-white/[0.07] flex flex-wrap items-center justify-between gap-4">
               <div className="flex items-center gap-1.5 font-mono text-[10px] text-text-dim">
                 <ShieldCheck className="w-3.5 h-3.5 text-accent" />
-                <span>Protected with Server Rate Limiting & Bot Scrubbing</span>
+                <span>Sends directly to inbox via Resend API</span>
               </div>
 
               <div className="flex items-center gap-3">
@@ -215,7 +215,7 @@ export const EmailEditorModal: React.FC<EmailEditorModalProps> = ({
                   className={buttonStyles("primary", "md")}
                 >
                   <Send className="w-3.5 h-3.5 text-accent" />
-                  <span>{status === "sending" ? "Dispatching..." : "Transmit Signal"}</span>
+                  <span>{status === "sending" ? "Sending..." : "Send Message"}</span>
                 </button>
               </div>
             </div>

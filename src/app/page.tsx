@@ -21,6 +21,7 @@ export default function Home() {
   const projects = getProjects();
   const skills = getSkillCategories();
   const education = getEducation();
+  const codelens = projects.find((p) => p.slug === "codelens");
 
   return (
     <div className="relative min-h-screen flex flex-col selection:bg-accent/20 selection:text-white">
@@ -28,7 +29,11 @@ export default function Home() {
       <SiteHeader />
 
       <main id="main-content" className="flex-1">
-        <HeroSection profile={profile} />
+        <HeroSection
+          profile={profile}
+          projectCount={projects.length}
+          codelensMetrics={codelens?.metrics}
+        />
 
         {profile.statement && (
           <section id="statement" className="py-28 lg:py-44">
@@ -48,7 +53,7 @@ export default function Home() {
         <CapabilitiesSection categories={skills} projects={projects} />
         <MethodologySection />
         <LogbookSection education={education} />
-        <ContactSection email={profile.email} links={profile.links} />
+        <ContactSection links={profile.links} />
       </main>
 
       <SiteFooter

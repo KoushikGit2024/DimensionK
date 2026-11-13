@@ -115,8 +115,12 @@ export const ProjectConstellation: React.FC<{
               tabIndex={0}
               onKeyDown={(e) => {
                 if (e.key === "Enter" || e.key === " ") {
-                  const el = document.getElementById(`project-${pt.slug}`);
-                  if (el) el.scrollIntoView({ behavior: "smooth" });
+                  if (onSelect) {
+                    onSelect(pt.slug);
+                  } else {
+                    const el = document.getElementById(`project-${pt.slug}`);
+                    if (el) el.scrollIntoView({ behavior: "smooth" });
+                  }
                 }
               }}
             >
@@ -136,7 +140,7 @@ export const ProjectConstellation: React.FC<{
                 fill={isHovered ? "#f0a35e" : "#38f2e6"}
                 stroke="#0c1018"
                 strokeWidth={1.5}
-                className="transition-all duration-300 shadow-[0_0_16px_rgba(56,242,230,0.9)]"
+                className="transition-all duration-300"
               />
               <text
                 x={pt.x}

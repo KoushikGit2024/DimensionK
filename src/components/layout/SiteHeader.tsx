@@ -8,7 +8,7 @@ import { useActiveSection } from "@/hooks/useActiveSection";
 import { Menu, X, Command } from "lucide-react";
 
 const NAV_LINKS = [
-  { id: "hero", label: "Horizon", href: "/#hero" },
+  { id: "about", label: "Horizon", href: "/#about" },
   { id: "work", label: "Projects", href: "/#work" },
   { id: "capabilities", label: "Capabilities", href: "/#capabilities" },
   { id: "methodology", label: "Methodology", href: "/#methodology" },
@@ -19,23 +19,11 @@ const NAV_LINKS = [
 export const SiteHeader: React.FC = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-  const [hidden, setHidden] = useState(false);
   const activeSection = useActiveSection(NAV_LINKS.map((n) => n.id));
 
   useEffect(() => {
-    let lastY = window.scrollY;
-
     const handleScroll = () => {
-      const currentY = window.scrollY;
-      setScrolled(currentY > 24);
-
-      if (currentY > 100 && currentY - lastY > 8) {
-        setHidden(true); // scrolling down
-      } else if (lastY - currentY > 8 || currentY <= 100) {
-        setHidden(false); // scrolling up
-      }
-
-      lastY = currentY;
+      setScrolled(window.scrollY > 16);
     };
 
     handleScroll();
@@ -54,11 +42,9 @@ export const SiteHeader: React.FC = () => {
 
   return (
     <header
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 border-b ${
-        hidden ? "-translate-y-full" : "translate-y-0"
-      } ${
+      className={`sticky top-0 z-50 transition-colors duration-200 border-b ${
         scrolled
-          ? "bg-surface-raised/90 backdrop-blur-xl border-white/[0.1]"
+          ? "bg-surface-raised/95 backdrop-blur-xl border-white/[0.1] shadow-lg shadow-black/40"
           : "bg-surface-raised/60 backdrop-blur-md border-white/[0.06]"
       } h-16 sm:h-20 flex items-center`}
     >
@@ -75,9 +61,6 @@ export const SiteHeader: React.FC = () => {
               <div className="flex flex-col">
                 <span className="font-mono text-xs sm:text-sm tracking-widest uppercase font-semibold text-text group-hover:text-white transition-colors leading-none">
                   DIMENSION-K
-                </span>
-                <span className="font-mono text-[9px] tracking-widest text-text-muted uppercase mt-0.5 hidden sm:inline">
-                  OBS // 22.75°N
                 </span>
               </div>
             </Link>
@@ -115,9 +98,10 @@ export const SiteHeader: React.FC = () => {
             <button
               type="button"
               onClick={() => {
-                window.dispatchEvent(
-                  new KeyboardEvent("keydown", { key: "k", ctrlKey: true })
-                );
+                const paletteDialog = document.querySelector("dialog");
+                if (paletteDialog && !paletteDialog.open) {
+                  paletteDialog.showModal();
+                }
               }}
               className="hidden sm:inline-flex items-center gap-1.5 px-2 py-1 rounded bg-white/[0.03] border border-white/10 hover:border-white/20 text-text-dim text-[11px] font-mono transition-colors cursor-pointer"
               title="Open Command Palette (Ctrl+K)"

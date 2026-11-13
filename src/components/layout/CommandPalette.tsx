@@ -78,6 +78,13 @@ export const CommandPalette: React.FC = () => {
         run: () => router.push("/projects/algovisuals"),
       },
       {
+        id: "proj-remidos",
+        label: "Remidos Full-Stack Workspace",
+        category: "Projects",
+        hint: "Task Manager",
+        run: () => router.push("/projects/remidos"),
+      },
+      {
         id: "action-github",
         label: "Open GitHub Profile",
         category: "Action",

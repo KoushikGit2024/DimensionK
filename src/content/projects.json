@@ -1,52 +1,64 @@
 [
+
   {
     "slug": "codelens",
     "title": "CodeLens",
-    "tagline": "Repository Intelligence Platform",
+    "tagline": "Static Codebase Intelligence & Architecture Analysis",
     "category": "developer-tools",
     "featured": true,
-    "status": "in-progress",
-    "summary": "AST-based source code analysis, dependency exploration, and codebase architecture visualization.",
-    "metrics": {
-      "nodes": 1468,
-      "edges": 2760,
-      "communities": 138
-    },
-    "technologies": ["TypeScript", "Node.js", "AST", "Graph Analysis", "React"],
+    "status": "completed",
+    "summary": "An AST-driven source code intelligence platform for mapping dependencies, uncovering codebase architecture, and enabling informed refactoring through deterministic analysis and repository-grounded AI assistance.",
+    "technologies": [
+      "JavaScript",
+      "React",
+      "Node.js",
+      "Express.js",
+      "Tree-sitter",
+      "AST Parsing",
+      "Graph Analysis",
+      "D3.js",
+      "Monaco Editor",
+      "Web Workers",
+      "Supabase",
+      "IndexedDB",
+      "Vite"
+    ],
     "highlights": [
-      "Engineered an AST-based source code parser to extract module relationships and syntactic structures.",
-      "Analyzed an extensive repository graph containing 1,468 nodes, 2,760 edges, and 138 detected communities.",
-      "Integrated repository-grounded AI documentation with deterministic-first analysis workflows."
+      "Built an AST-based parsing engine to extract source structures, resolve module dependencies, and map relationships across the codebase.",
+      "Analyzed a repository graph comprising 1,468 nodes, 2,760 edges, and 138 detected architectural communities.",
+      "Combined deterministic repository analysis with code-grounded AI documentation to produce context-aware insights without relying on speculative code interpretation."
     ],
     "story": {
-      "problem": "Navigating medium-to-large codebases often feels like exploring a dense forest in fog. Developers jump between definitions without a mental model of module dependencies, clustering, or architectural boundaries. Most documentation drifts out of sync immediately because it is manually maintained rather than grounded in actual AST syntax trees.",
+      "problem": "Understanding a medium-to-large codebase is often a matter of piecing together scattered definitions, dependencies, and module relationships. Without a clear architectural picture, even seemingly small changes can require navigating hundreds of files. Traditional documentation also tends to drift away from implementation because it is maintained separately from the source code. CodeLens addresses this gap by deriving architectural insights directly from the code itself.",
       "constraints": [
-        "Must run entirely deterministically without hallucinating fake imports or phantom dependencies.",
-        "Must scale to parse thousands of files and resolve barrel files, circular references, and dynamic exports in sub-second timelines.",
-        "Must preserve memory efficiency while computing complex Louvain or modularity-based community detection on node clusters."
+        "Ensure that dependency analysis remains deterministic, avoiding fabricated imports, inferred relationships, or dependencies unsupported by the source code.",
+        "Handle repositories containing thousands of files while resolving barrel exports, circular dependencies, and dynamic module references efficiently.",
+        "Keep memory consumption under control while performing graph analysis and modularity-based community detection on large dependency networks."
       ],
       "decisions": [
         {
-          "title": "Deterministic AST Parser over Regex / Heuristics",
-          "why": "Regex cannot resolve nested scope closures, aliased re-exports, or syntax edge cases. A deterministic Babel/TypeScript parser provides unambiguous dependency graphs.",
-          "tradeoff": "Higher initial parse CPU cost compared to naive string scanning, requiring caching and incremental file diffing."
+          "title": "AST Parsing Instead of Regex-Based Extraction",
+          "why": "Regular expressions cannot reliably interpret nested scopes, aliased re-exports, or complex language syntax. AST-based parsing provides structured access to source code and a more dependable foundation for dependency extraction.",
+          "tradeoff": "Structured parsing introduces greater initial processing overhead than simple string matching, making caching and incremental analysis important for maintaining performance."
         },
         {
-          "title": "Graph Partitioning with Modularity Detection",
-          "why": "Flat 2,000-node graphs produce incomprehensible hairballs. Community clustering groups related functional modules into digestible architectural islands.",
-          "tradeoff": "Non-trivial computational complexity requiring adjacency matrix optimizations."
+          "title": "Community Detection for Architectural Clarity",
+          "why": "Rendering thousands of interconnected modules as a single flat graph quickly becomes difficult to interpret. Modularity-based community detection groups closely related components into meaningful clusters, making larger architectures easier to explore.",
+          "tradeoff": "Graph partitioning introduces additional computational overhead and requires efficient graph representations and traversal strategies."
         },
         {
-          "title": "Grounded AI Context Generation",
-          "why": "LLM summaries are only trustworthy when fed explicit AST-proven topological order rather than random snippets.",
-          "tradeoff": "Prompt length budgets require careful extraction of interface definitions and call edges rather than full method bodies."
+          "title": "Repository-Grounded AI Assistance",
+          "why": "AI-generated explanations are only useful when they reflect the actual structure of a repository. Feeding the model verified dependency relationships and extracted code context helps keep generated documentation anchored to the implementation.",
+          "tradeoff": "Context-window limitations require selective extraction of relevant interfaces, relationships, and source structures instead of passing entire files or methods."
         }
       ],
-      "hardest": "Handling cyclic dependencies and tangled barrel exports without causing infinite recursion in graph traversals or blowing up memory during community clustering.",
-      "mistakes": "Initially attempted to render the entire 1,400-node SVG graph in a single DOM pass. The browser UI choked at 4 FPS. Replaced it with hierarchical viewport culling, level-of-detail aggregation, and decoupled web workers for force layout simulation.",
-      "next": "Adding cross-language support for Rust and Go, and real-time git diff graph overlays to evaluate PR architectural blast radius."
+      "hardest": "Resolving circular dependencies and deeply nested barrel exports without triggering recursive traversal loops, duplicating graph relationships, or exhausting memory during large-scale community detection.",
+      "mistakes": "The initial implementation attempted to render the entire 1,400-node dependency graph in a single SVG pass, causing severe browser performance degradation, with rendering dropping to approximately 4 FPS. The visualization was reworked around hierarchical viewport culling, level-of-detail aggregation, and Web Workers to separate graph layout computation from the main rendering thread.",
+      "next": "Extend language support to Rust and Go, and introduce Git-aware graph overlays that reveal the architectural impact of individual commits and pull requests."
     },
-    "previewImage": null,
+    "previewImage": "/projects/codelens.png",
+    "previewUrl": null,
+    "pageUrl": "https://codelens-rust.vercel.app",
     "links": {
       "github": "https://github.com/KoushikGit2024/CodeLens",
       "demo": null
@@ -99,6 +111,8 @@
       "next": "Implementing WebRTC data channels for peer-assisted audio chat and distributed lobby matchmaking across regional edge nodes."
     },
     "previewImage": null,
+    "previewUrl": null,
+    "pageUrl": null,
     "links": {
       "github": "https://github.com/KoushikGit2024/LudoNeo",
       "demo": null
@@ -146,6 +160,8 @@
       "next": "Adding dynamic programming grid matrices and Dijkstra / A* graph traversal pathfinding overlays."
     },
     "previewImage": null,
+    "previewUrl": null,
+    "pageUrl": null,
     "links": {
       "github": "https://github.com/KoushikGit2024/AlgoVisuals",
       "demo": null
@@ -187,6 +203,8 @@
       "next": "Adding collaborative multi-tenant boards and offline-first IndexedDB synchronization with conflict resolution."
     },
     "previewImage": null,
+    "previewUrl": null,
+    "pageUrl": null,
     "links": {
       "github": "https://github.com/KoushikGit2024/Remidos",
       "demo": null

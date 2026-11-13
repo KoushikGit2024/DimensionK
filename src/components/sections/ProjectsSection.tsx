@@ -2,7 +2,8 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
-import { ArrowUpRight, GitBranch } from "lucide-react";
+import { ArrowUpRight } from "lucide-react";
+import { GitHubIcon } from "@/components/icons/GitHubIcon";
 import { Container } from "@/components/layout/Container";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { CountUp } from "@/components/ui/CountUp";
@@ -25,19 +26,7 @@ export const ProjectsSection: React.FC<Props> = ({ projects }) => {
           index="01"
           eyebrow="Projects"
           title="Things I have built"
-          description="Developer tooling, a real-time multiplayer engine, an algorithm visualizer and a full-stack workspace. Open any row for interactive previews and technical write-ups."
         />
-
-        <div className="my-8">
-          <ProjectConstellation
-            projects={projects}
-            onSelect={(slug) => {
-              setOpen(slug);
-              const el = document.getElementById(`project-${slug}`);
-              if (el) el.scrollIntoView({ behavior: "smooth" });
-            }}
-          />
-        </div>
 
         <ol className="border-t border-white/[0.08]">
           {projects.map((p, i) => {
@@ -102,7 +91,8 @@ export const ProjectsSection: React.FC<Props> = ({ projects }) => {
                           tagline={p.tagline}
                           summary={p.summary}
                           technologies={p.technologies}
-                          demoUrl={p.links.demo}
+                          previewUrl={p.previewUrl || p.links.demo}
+                          pageUrl={p.pageUrl}
                           githubUrl={p.links.github}
                           previewImage={p.previewImage}
                           aspectRatio="video"
@@ -158,14 +148,14 @@ export const ProjectsSection: React.FC<Props> = ({ projects }) => {
                               rel="noopener noreferrer"
                               className="link-draw inline-flex items-center gap-1.5 text-text-secondary hover:text-text"
                             >
-                              <GitBranch className="h-3.5 w-3.5 text-accent" /> Source Code
+                              <GitHubIcon className="h-3.5 w-3.5 text-accent" /> Source Code
                             </a>
                           )}
                           <Link
                             href={`/projects/${p.slug}`}
                             className="link-draw inline-flex items-center gap-1 text-warm font-semibold"
                           >
-                            Read Engineering Deep Dive <ArrowUpRight className="h-3.5 w-3.5" />
+                            Read In Details <ArrowUpRight className="h-3.5 w-3.5" />
                           </Link>
                         </div>
                       </div>

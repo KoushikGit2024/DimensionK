@@ -17,7 +17,8 @@ interface ProjectPreviewWindowProps {
   tagline?: string;
   summary?: string;
   technologies?: string[];
-  demoUrl?: string | null;
+  previewUrl?: string | null;
+  pageUrl?: string | null;
   githubUrl?: string | null;
   previewImage?: string | null;
   className?: string;
@@ -29,7 +30,8 @@ export const ProjectPreviewWindow: React.FC<ProjectPreviewWindowProps> = ({
   tagline,
   summary,
   technologies = [],
-  demoUrl,
+  previewUrl,
+  pageUrl,
   githubUrl,
   previewImage,
   className = "",
@@ -47,9 +49,16 @@ export const ProjectPreviewWindow: React.FC<ProjectPreviewWindowProps> = ({
   };
 
   // Determine current display state
-  const canShowIframe = Boolean(demoUrl) && !iframeFailed;
-  const canShowImage = Boolean(previewImage) && !imageFailed && (!demoUrl || iframeFailed);
+  const canShowIframe = Boolean(previewUrl) && !iframeFailed;
+  const canShowImage = Boolean(previewImage) && !imageFailed && (!previewUrl || iframeFailed);
   const isFallback = !canShowIframe && !canShowImage;
+
+  // The displayed URL string in the address bar (custom pageUrl if provided, else previewUrl or local simulator)
+  const displayAddress =
+    pageUrl ||
+    (previewUrl
+      ? previewUrl.replace(/^https?:\/\//, "")
+      : `preview://${title.toLowerCase().replace(/[^a-z0-9]/g, "")}.local`);
 
   return (
     <div
@@ -66,14 +75,25 @@ export const ProjectPreviewWindow: React.FC<ProjectPreviewWindowProps> = ({
 
         {/* Address Bar */}
         <div className="flex-1 max-w-md mx-auto flex items-center justify-between px-3 py-1 rounded bg-void/80 border border-white/[0.08] text-text-dim text-[11px] truncate">
-          <div className="flex items-center gap-1.5 truncate">
-            <Globe className="w-3 h-3 text-accent shrink-0" />
-            <span className="truncate">
-              {demoUrl ? demoUrl.replace(/^https?:\/\//, "") : `preview://${title.toLowerCase()}.local`}
-            </span>
-          </div>
+          {pageUrl || previewUrl ? (
+            <a
+              href={pageUrl || previewUrl!}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-1.5 truncate hover:text-accent transition-colors cursor-pointer"
+              title={`Visit ${displayAddress}`}
+            >
+              <Globe className="w-3 h-3 text-accent shrink-0" />
+              <span className="truncate">{displayAddress}</span>
+            </a>
+          ) : (
+            <div className="flex items-center gap-1.5 truncate">
+              <Globe className="w-3 h-3 text-accent shrink-0" />
+              <span className="truncate">{displayAddress}</span>
+            </div>
+          )}
 
-          {demoUrl && (
+          {previewUrl && (
             <button
               type="button"
               onClick={reloadIframe}
@@ -87,15 +107,15 @@ export const ProjectPreviewWindow: React.FC<ProjectPreviewWindowProps> = ({
 
         {/* External Jump Action */}
         <div className="flex items-center gap-2 shrink-0">
-          {demoUrl ? (
+          {pageUrl || previewUrl ? (
             <a
-              href={demoUrl}
+              href={pageUrl || previewUrl!}
               target="_blank"
               rel="noopener noreferrer"
               className="text-text-dim hover:text-warm transition-colors inline-flex items-center gap-1 text-[11px]"
-              title="Open live website in new tab"
+              title="Open site in new tab"
             >
-              <span>Live Site</span>
+              <span>Visit</span>
               <ExternalLink className="w-3 h-3 text-accent" />
             </a>
           ) : githubUrl ? (
@@ -127,12 +147,12 @@ export const ProjectPreviewWindow: React.FC<ProjectPreviewWindowProps> = ({
             {!iframeLoaded && (
               <div className="absolute inset-0 flex flex-col items-center justify-center font-mono text-xs text-text-dim gap-2 bg-void z-10">
                 <div className="w-5 h-5 border-2 border-accent border-t-transparent rounded-full animate-spin" />
-                <span>Connecting to live host...</span>
+                <span>Connecting to live preview...</span>
               </div>
             )}
             <iframe
               key={key}
-              src={demoUrl!}
+              src={previewUrl!}
               title={`${title} live deployment preview`}
               className="w-full h-full border-none"
               onLoad={() => setIframeLoaded(true)}
@@ -145,27 +165,27 @@ export const ProjectPreviewWindow: React.FC<ProjectPreviewWindowProps> = ({
 
         {/* Mode 2: Screenshot Image */}
         {canShowImage && (
-          <div className="relative w-full h-full group bg-surface/50">
+          <div className="relative w-full h-full group bg-surface/50 overflow-hidden">
             <Image
               src={previewImage!}
               alt={`${title} interface preview screenshot`}
               fill
-              className="object-cover object-top transition-transform duration-500 group-hover:scale-[1.02]"
+              className="object-contain p-2 transition-transform duration-500 group-hover:scale-[1.02]"
               sizes="(max-width: 768px) 100vw, (max-width: 1200px) 70vw, 900px"
               onError={() => setImageFailed(true)}
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-void/90 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end justify-between p-4 font-mono text-xs">
-              <span className="text-text bg-surface/90 px-2.5 py-1 rounded border border-white/10">
-                {title} // Static Capture
+            <div className="absolute inset-0 bg-gradient-to-t from-void/90 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end justify-between p-4 font-mono text-xs pointer-events-none">
+              <span className="text-text bg-surface/90 px-2.5 py-1 rounded border border-white/10 pointer-events-auto">
+                Static Capture
               </span>
-              {demoUrl && (
+              {previewUrl && (
                 <a
-                  href={demoUrl}
+                  href={previewUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-warm bg-surface/90 px-2.5 py-1 rounded border border-white/10 inline-flex items-center gap-1"
+                  className="text-warm bg-surface/90 px-2.5 py-1 rounded border border-white/10 inline-flex items-center gap-1 pointer-events-auto"
                 >
-                  <span>Launch Live</span>
+                  <span>Launch Preview</span>
                   <ExternalLink className="w-3 h-3" />
                 </a>
               )}

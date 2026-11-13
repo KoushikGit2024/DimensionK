@@ -3,7 +3,7 @@
 import React from "react";
 import { Pillar } from "./pillars";
 import { Card } from "@/components/ui/Card";
-import { Cpu, Terminal, GitBranch, ShieldCheck } from "lucide-react";
+import { Terminal, ShieldCheck } from "lucide-react";
 
 interface PillarPanelProps {
   pillar: Pillar;

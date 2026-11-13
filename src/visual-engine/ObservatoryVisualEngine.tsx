@@ -19,40 +19,47 @@ const InteractiveSceneRig: React.FC<InteractiveRigProps> = ({
   const groupRef = useRef<THREE.Group>(null);
 
   const baseOffsetX =
-    deviceTier === "desktop" ? 3.2 : deviceTier === "tablet" ? 1.8 : 0;
+    deviceTier === "desktop" ? 2.85 : deviceTier === "tablet" ? 1.65 : 0;
+  const baseOffsetY = deviceTier === "desktop" ? -0.15 : 0;
   const baseScale =
-    deviceTier === "desktop" ? 1 : deviceTier === "tablet" ? 0.82 : 0.64;
+    deviceTier === "desktop" ? 0.94 : deviceTier === "tablet" ? 0.78 : 0.62;
 
   useFrame((_, delta) => {
-    if (!groupRef.current) return;
-    const dt = Math.min(delta, 0.1);
-    const targetX = baseOffsetX + pointerRef.current.x * 0.55;
-    const targetY = -pointerRef.current.y * 0.45;
+    const group = groupRef.current;
+    if (!group) return;
 
-    groupRef.current.position.x = THREE.MathUtils.lerp(
-      groupRef.current.position.x,
-      targetX,
-      dt * 3.5
-    );
-    groupRef.current.position.y = THREE.MathUtils.lerp(
-      groupRef.current.position.y,
-      targetY,
-      dt * 3.5
-    );
+    const dt = Math.min(delta, 0.1);
+    const px = pointerRef.current.x;
+    const py = pointerRef.current.y;
+
+    const targetX = baseOffsetX + px * 0.38;
+    const targetY = baseOffsetY - py * 0.32;
+    const targetRotX = py * 0.1;
+    const targetRotY = px * 0.12;
+
+    const dx = targetX - group.position.x;
+    const dy = targetY - group.position.y;
+    if (Math.abs(dx) > 0.0005 || Math.abs(dy) > 0.0005) {
+      const factor = 1 - Math.exp(-dt * 4.0);
+      group.position.x += dx * factor;
+      group.position.y += dy * factor;
+      group.rotation.x += (targetRotX - group.rotation.x) * factor;
+      group.rotation.y += (targetRotY - group.rotation.y) * factor;
+    }
   });
 
   return (
     <group
       ref={groupRef}
-      position={[baseOffsetX, 0, 0]}
+      position={[baseOffsetX, baseOffsetY, 0]}
       scale={[baseScale, baseScale, baseScale]}
     >
       <GalacticCore
         particleCount={
           deviceTier === "desktop"
-            ? 7200
+            ? 6800
             : deviceTier === "tablet"
-            ? 3600
+            ? 3400
             : 1800
         }
       />
@@ -67,18 +74,22 @@ const DynamicCanvas = dynamic(
       return function CanvasWrapper({
         children,
         active,
+        deviceTier,
       }: {
         children: React.ReactNode;
         active: boolean;
+        deviceTier: "desktop" | "tablet" | "mobile";
       }) {
         return (
           <Canvas
             frameloop={active ? "always" : "demand"}
             camera={{ position: [0, 0, 9.5], fov: 45 }}
-            dpr={[1, 1.75]}
+            dpr={deviceTier === "desktop" ? [1, 1.65] : [1, 1.25]}
             gl={{
-              antialias: true,
+              antialias: deviceTier === "desktop",
               alpha: true,
+              stencil: false,
+              depth: true,
               powerPreference: "high-performance",
             }}
           >
@@ -103,21 +114,27 @@ export const ObservatoryVisualEngine: React.FC = () => {
   const [isSlowNetwork, setIsSlowNetwork] = useState(false);
 
   useEffect(() => {
-    // Detect prefers-reduced-motion
     const motionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
     setReducedMotion(motionQuery.matches);
-    const handleMotionChange = (e: MediaQueryListEvent) => setReducedMotion(e.matches);
+    const handleMotionChange = (e: MediaQueryListEvent) =>
+      setReducedMotion(e.matches);
     motionQuery.addEventListener("change", handleMotionChange);
 
-    // Detect slow network connection (Save-Data or 2g)
     if ("connection" in navigator) {
-      const conn = (navigator as unknown as { connection?: { saveData?: boolean; effectiveType?: string } }).connection;
-      if (conn?.saveData || conn?.effectiveType === "2g" || conn?.effectiveType === "slow-2g") {
+      const conn = (
+        navigator as unknown as {
+          connection?: { saveData?: boolean; effectiveType?: string };
+        }
+      ).connection;
+      if (
+        conn?.saveData ||
+        conn?.effectiveType === "2g" ||
+        conn?.effectiveType === "slow-2g"
+      ) {
         setIsSlowNetwork(true);
       }
     }
 
-    // Evaluate device tier & touch characteristics
     const evaluateDevice = () => {
       const width = window.innerWidth;
       const isTouch = window.matchMedia("(pointer: coarse)").matches;
@@ -160,7 +177,6 @@ export const ObservatoryVisualEngine: React.FC = () => {
     };
   }, []);
 
-  // Use pure zero-GPU schematic fallback if user prefers reduced motion or is on slow network
   const useSchematicOnly = reducedMotion || isSlowNetwork;
   const isCanvasActive = inViewport && pageVisible && !reducedMotion;
 
@@ -170,7 +186,7 @@ export const ObservatoryVisualEngine: React.FC = () => {
       aria-hidden="true"
       className="absolute inset-0 pointer-events-none select-none z-0 overflow-hidden"
     >
-      {/* Precision Optical Astrolabe SVG Layer (subtle backdrop geometry) */}
+      {/* Precision Optical Astrolabe SVG Layer */}
       <div
         className={`absolute inset-0 flex items-center justify-center lg:justify-end lg:pr-[8%] transition-opacity duration-700 ${
           useSchematicOnly ? "opacity-90" : "opacity-25"
@@ -247,11 +263,18 @@ export const ObservatoryVisualEngine: React.FC = () => {
         </svg>
       </div>
 
-      {/* 3D WebGL Canvas Layer (intelligently scaled by device tier) */}
+      {/* 3D WebGL Canvas Layer */}
       {!useSchematicOnly && deviceTier !== null && (
-        <DynamicCanvas active={isCanvasActive}>
-          <ambientLight intensity={0.4} />
-          <Starfield count={deviceTier === "mobile" ? 450 : deviceTier === "tablet" ? 950 : 1800} />
+        <DynamicCanvas active={isCanvasActive} deviceTier={deviceTier}>
+          <Starfield
+            count={
+              deviceTier === "mobile"
+                ? 450
+                : deviceTier === "tablet"
+                ? 950
+                : 1800
+            }
+          />
           <InteractiveSceneRig
             deviceTier={deviceTier}
             pointerRef={pointerRef}

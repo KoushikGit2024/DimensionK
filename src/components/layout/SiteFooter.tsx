@@ -31,8 +31,7 @@ export const SiteFooter: React.FC<SiteFooterProps> = ({
               <span className="text-accent-subtle">DIMENSION-K OBSERVATORY</span>
             </div>
             <p className="text-text-dim">
-              Station Coordinates: {coordinates} • NIT Agartala Undergraduate
-              Engineering Archive
+              National Institute of Technology Agartala
             </p>
           </div>
 

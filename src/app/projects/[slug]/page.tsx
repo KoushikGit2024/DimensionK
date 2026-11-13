@@ -11,10 +11,10 @@ import { TelemetryStamp } from "@/components/ui/TelemetryStamp";
 import { buttonStyles } from "@/components/ui/Button";
 import { ObservatoryCursor } from "@/components/visual/ObservatoryCursor";
 import { ProjectPreviewWindow } from "@/components/ui/ProjectPreviewWindow";
+import { GitHubIcon } from "@/components/icons/GitHubIcon";
 import {
   ArrowLeft,
   ArrowRight,
-  GitBranch,
   ArrowUpRight,
   Layers,
   Cpu,
@@ -70,27 +70,13 @@ async function ProjectContent({ params }: ProjectPageProps) {
           className="inline-flex items-center gap-2 text-xs font-mono text-text-muted hover:text-accent transition-colors py-1.5 px-3 rounded-xs border border-white/[0.07] bg-white/[0.02]"
         >
           <ArrowLeft className="w-3.5 h-3.5 text-accent" />
-          <span>Return to Constellation Index</span>
+          <span>Return to Projects</span>
         </Link>
-
-        <span className="font-mono text-xs text-text-dim hidden sm:inline">
-          CASE STUDY // 0{currentIndex + 1} OF 0{allProjects.length}
-        </span>
       </div>
 
       {/* Hero Header */}
       <header className="space-y-6 pb-12 border-b border-white/[0.08]">
         <div className="flex flex-wrap items-center gap-2.5">
-          <TelemetryStamp
-            label="SECTOR"
-            value={project.observatoryCoordinates?.sector || "GENERAL"}
-          />
-          {project.observatoryCoordinates?.magnitude && (
-            <TelemetryStamp
-              label="MAGNITUDE"
-              value={project.observatoryCoordinates.magnitude}
-            />
-          )}
           <Badge variant="status" className="uppercase">
             {project.status}
           </Badge>
@@ -118,7 +104,7 @@ async function ProjectContent({ params }: ProjectPageProps) {
               rel="noopener noreferrer"
               className={buttonStyles("primary", "md")}
             >
-              <GitBranch className="w-4 h-4 text-accent" />
+              <GitHubIcon className="w-4 h-4 text-accent" />
               <span>Inspect GitHub Repository</span>
               <ArrowUpRight className="w-3.5 h-3.5 text-text-dim" />
             </a>
@@ -152,7 +138,8 @@ async function ProjectContent({ params }: ProjectPageProps) {
               tagline={project.tagline}
               summary={project.summary}
               technologies={project.technologies}
-              demoUrl={project.links.demo}
+              previewUrl={project.previewUrl || project.links.demo}
+              pageUrl={project.pageUrl}
               githubUrl={project.links.github}
               previewImage={project.previewImage}
               aspectRatio="wide"
@@ -326,21 +313,13 @@ async function ProjectContent({ params }: ProjectPageProps) {
                   <span className="text-text-dim">STATUS</span>
                   <span className="text-accent uppercase">{project.status}</span>
                 </div>
-                {project.observatoryCoordinates && (
-                  <div className="flex justify-between">
-                    <span className="text-text-dim">COORDINATES</span>
-                    <span className="text-text">
-                      {project.observatoryCoordinates.sector}
-                    </span>
-                  </div>
-                )}
               </div>
             </Card>
           </div>
         </aside>
       </div>
 
-      {/* Sequential Constellation Navigation */}
+      {/* Sequential Project Navigation */}
       <nav
         aria-label="Adjacent project case studies"
         className="mt-16 pt-8 border-t border-white/[0.08] grid grid-cols-1 sm:grid-cols-2 gap-6"
@@ -352,7 +331,7 @@ async function ProjectContent({ params }: ProjectPageProps) {
           <div className="space-y-1">
             <span className="font-mono text-[10px] uppercase tracking-widest text-text-dim flex items-center gap-1.5">
               <ArrowLeft className="w-3 h-3 text-warm" />
-              <span>Previous Sector</span>
+              <span>Previous Project</span>
             </span>
             <div className="font-display text-xl text-text group-hover:text-warm transition-colors">
               {prevProject.title}
@@ -369,7 +348,7 @@ async function ProjectContent({ params }: ProjectPageProps) {
         >
           <div className="space-y-1 ml-auto">
             <span className="font-mono text-[10px] uppercase tracking-widest text-text-dim flex items-center justify-end gap-1.5">
-              <span>Next Sector</span>
+              <span>Next Project</span>
               <ArrowRight className="w-3 h-3 text-warm" />
             </span>
             <div className="font-display text-xl text-text group-hover:text-warm transition-colors">

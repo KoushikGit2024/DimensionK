@@ -11,7 +11,6 @@ import { EmailEditorModal } from "@/components/contact/EmailEditorModal";
 import { Send, Clock, ArrowUpRight, MessageSquareCode, ShieldCheck } from "lucide-react";
 
 interface ContactSectionProps {
-  email: string;
   links: ExternalLink[];
 }
 
@@ -37,7 +36,9 @@ export const ContactSection: React.FC<ContactSectionProps> = ({
   links,
 }) => {
   const [isEditorOpen, setIsEditorOpen] = useState(false);
-  const [selectedTopic, setSelectedTopic] = useState(TRANSMISSION_TOPICS[0]);
+  const [subject, setSubject] = useState(
+    "Software Engineering Opportunity — Koushik Kar"
+  );
   const [localTime, setLocalTime] = useState<string>("");
 
   useEffect(() => {
@@ -129,10 +130,10 @@ export const ContactSection: React.FC<ContactSectionProps> = ({
                   </span>
                 </div>
 
-                {/* Subject Presets */}
+                {/* Subject Preset Choices */}
                 <div className="space-y-3 pt-2">
                   <span className="font-mono text-xs uppercase tracking-wider text-text-dim block">
-                    Choose Transmission Protocol Preset
+                    Choose Subject Preset
                   </span>
                   <div
                     role="radiogroup"
@@ -140,26 +141,23 @@ export const ContactSection: React.FC<ContactSectionProps> = ({
                     className="grid grid-cols-1 sm:grid-cols-3 gap-2.5"
                   >
                     {TRANSMISSION_TOPICS.map((topic) => {
-                      const active = selectedTopic.id === topic.id;
+                      const active = subject === topic.subject;
                       return (
-                        <label
+                        <button
                           key={topic.id}
+                          type="button"
+                          onClick={() => {
+                            setSubject(topic.subject);
+                            setIsEditorOpen(true);
+                          }}
                           className={`p-3 rounded-md font-mono text-xs text-left border transition-all cursor-pointer block ${
                             active
                               ? "bg-warm/15 border-warm text-warm font-medium shadow-[0_0_12px_rgba(240,163,94,0.15)]"
                               : "bg-surface/50 border-white/[0.07] text-text-secondary hover:text-text hover:border-white/20"
                           }`}
                         >
-                          <input
-                            type="radio"
-                            name="transmission-topic"
-                            value={topic.id}
-                            checked={active}
-                            onChange={() => setSelectedTopic(topic)}
-                            className="sr-only"
-                          />
                           <span>{topic.label}</span>
-                        </label>
+                        </button>
                       );
                     })}
                   </div>
@@ -168,7 +166,7 @@ export const ContactSection: React.FC<ContactSectionProps> = ({
 
               <div className="pt-6 border-t border-white/[0.07] flex flex-wrap items-center justify-between gap-4">
                 <span className="font-mono text-xs text-text-dim truncate max-w-xs sm:max-w-md">
-                  PROTOCOL: {selectedTopic.subject}
+                  TOPIC: {subject}
                 </span>
                 <Magnetic>
                   <button
@@ -177,7 +175,7 @@ export const ContactSection: React.FC<ContactSectionProps> = ({
                     className={buttonStyles("primary", "md")}
                   >
                     <Send className="w-3.5 h-3.5 text-accent" />
-                    <span>Open Transmission Editor</span>
+                    <span>Open Message Composer</span>
                   </button>
                 </Magnetic>
               </div>
@@ -229,7 +227,7 @@ export const ContactSection: React.FC<ContactSectionProps> = ({
       <EmailEditorModal
         isOpen={isEditorOpen}
         onClose={() => setIsEditorOpen(false)}
-        defaultSubject={selectedTopic.subject}
+        defaultSubject={subject}
       />
     </section>
   );
