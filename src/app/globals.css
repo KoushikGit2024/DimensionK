@@ -6,26 +6,33 @@
   --color-surface: #0c1018;
   --color-surface-raised: #121823;
   --color-surface-muted: #1a2332;
-  --color-surface-glass: rgba(12, 16, 24, 0.6);
+  --color-surface-glass: rgba(12, 16, 24, 0.7);
+
+  /* Chromatic Surface Tints */
+  --color-surface-cyan: rgba(12, 28, 38, 0.5);
+  --color-surface-indigo: rgba(16, 20, 38, 0.5);
+  --color-surface-amber: rgba(30, 20, 14, 0.5);
 
   /* Precision Optical Hairline Borders & Glow Tokens */
-  --border-hairline: rgba(255, 255, 255, 0.07);
-  --border-subtle: rgba(255, 255, 255, 0.12);
-  --border-glow: rgba(56, 242, 230, 0.28);
-  --border-strong: rgba(148, 163, 184, 0.38);
+  --border-hairline: rgba(255, 255, 255, 0.08);
+  --border-subtle: rgba(255, 255, 255, 0.14);
+  --border-glow: rgba(56, 242, 230, 0.35);
+  --border-warm-glow: rgba(240, 163, 94, 0.35);
+  --border-strong: rgba(148, 163, 184, 0.42);
 
   /* Editorial Typography Hierarchy */
   --color-text: #ece7dc;            /* warm paper, not cold white */
   --color-text-secondary: #a3a8b3;
   --color-text-muted: #8c93a3;
-  --color-text-dim: #747c8e;        /* was ~2.7:1, now above 4.5:1 */
+  --color-text-dim: #747c8e;        /* WCAG AA compliant */
 
   /* Calibrated Astronomical Accents */
-  --color-accent: #38f2e6;
-  --color-accent-subtle: #7dd3fc;
+  --color-accent: #38f2e6;          /* Ionized Cyan */
+  --color-accent-subtle: #7dd3fc;   /* Sky Blue */
   --color-accent-strong: #ffffff;
   --color-focus: #38bdf8;
-  --color-warm: #f0a35e;            /* ember: the human colour */
+  --color-warm: #f0a35e;            /* Stellar Amber / Ember */
+  --color-nebula: #a855f7;          /* Cosmic Violet */
 
   /* Motion Curves */
   --ease-standard: cubic-bezier(0.2, 0.7, 0.2, 1);
@@ -40,10 +47,15 @@
   --color-surface-muted: var(--color-surface-muted);
   --color-surface-glass: var(--color-surface-glass);
 
+  --color-surface-cyan: var(--color-surface-cyan);
+  --color-surface-indigo: var(--color-surface-indigo);
+  --color-surface-amber: var(--color-surface-amber);
+
   --color-border: var(--border-hairline);
   --color-border-subtle: var(--border-subtle);
   --color-border-strong: var(--border-strong);
   --color-border-glow: var(--border-glow);
+  --color-border-warm-glow: var(--border-warm-glow);
 
   --color-text: var(--color-text);
   --color-text-secondary: var(--color-text-secondary);
@@ -55,6 +67,7 @@
   --color-accent-strong: var(--color-accent-strong);
   --color-focus: var(--color-focus);
   --color-warm: var(--color-warm);
+  --color-nebula: var(--color-nebula);
 
   --font-sans: var(--font-geist-sans), system-ui, -apple-system, sans-serif;
   --font-mono: var(--font-geist-mono), ui-monospace, SFMono-Regular, monospace;
@@ -101,33 +114,44 @@ body {
   background: var(--color-void);
 }
 ::-webkit-scrollbar-thumb {
-  background: rgba(148, 163, 184, 0.2);
+  background: rgba(148, 163, 184, 0.25);
   border-radius: 3px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(56, 242, 230, 0.45);
+  background: rgba(56, 242, 230, 0.55);
 }
 
-/* Deep-space atmospheric depth & subtle astrometric grid */
+/* Deep-space atmospheric depth & astrometric grid */
 .cosmic-radial-depth {
   background-image:
-    radial-gradient(circle at 76% 32%, rgba(56, 242, 230, 0.045) 0%, transparent 48%),
-    radial-gradient(circle at 18% 78%, rgba(125, 211, 252, 0.03) 0%, transparent 42%),
-    radial-gradient(circle at 50% 0%, rgba(15, 23, 42, 0.65) 0%, transparent 60%);
+    radial-gradient(circle at 76% 32%, rgba(56, 242, 230, 0.075) 0%, transparent 52%),
+    radial-gradient(circle at 18% 78%, rgba(125, 211, 252, 0.06) 0%, transparent 48%),
+    radial-gradient(circle at 50% 0%, rgba(15, 23, 42, 0.75) 0%, transparent 65%);
 }
 
 .bg-deep-space-grid {
   background-image:
-    linear-gradient(to right, rgba(255, 255, 255, 0.025) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(255, 255, 255, 0.025) 1px, transparent 1px);
+    linear-gradient(to right, rgba(56, 242, 230, 0.035) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(56, 242, 230, 0.035) 1px, transparent 1px);
   background-size: 64px 64px;
 }
 
 .observatory-hairline-grid {
   background-image:
-    linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+    linear-gradient(to right, rgba(255, 255, 255, 0.035) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.035) 1px, transparent 1px);
   background-size: 48px 48px;
+}
+
+/* Specular glass edge highlights */
+.glass-edge-cyan {
+  border-top: 1px solid rgba(56, 242, 230, 0.28);
+  box-shadow: 0 10px 30px -10px rgba(56, 242, 230, 0.08);
+}
+
+.glass-edge-warm {
+  border-top: 1px solid rgba(240, 163, 94, 0.28);
+  box-shadow: 0 10px 30px -10px rgba(240, 163, 94, 0.08);
 }
 
 /* Underline that draws in, for text links */

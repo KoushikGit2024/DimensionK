@@ -34,11 +34,19 @@ export const ProjectConstellation: React.FC<{
   const hoveredProject = pts.find((p) => p.slug === hoveredSlug);
 
   return (
-    <div className={`relative p-6 rounded-lg border border-white/[0.08] bg-surface/40 ${className}`}>
-      <div className="flex items-center justify-between font-mono text-xs text-text-dim border-b border-white/[0.06] pb-3 mb-2">
+    <div
+      className={`relative p-6 sm:p-7 rounded-xl border border-white/[0.12] bg-surface/60 glass-edge-cyan overflow-hidden shadow-2xl ${className}`}
+    >
+      {/* Background radial constellation nebula wash */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute -inset-10 -z-10 bg-[radial-gradient(circle_at_50%_50%,rgba(56,242,230,0.08),rgba(168,85,247,0.05),transparent_70%)]"
+      />
+
+      <div className="flex items-center justify-between font-mono text-xs text-text-dim border-b border-white/[0.08] pb-3 mb-3">
         <span className="uppercase tracking-widest text-accent flex items-center gap-2">
           <span className="w-2 h-2 rounded-full bg-accent animate-ping" />
-          <span>CELESTIAL SPHERE // ASCENSION CONSTELLATION MAP</span>
+          <span className="font-semibold">CELESTIAL SPHERE // ASCENSION CONSTELLATION MAP</span>
         </span>
         <span className="text-text-muted">EPOCH J2026.5</span>
       </div>
@@ -59,7 +67,7 @@ export const ProjectConstellation: React.FC<{
                 y1={20}
                 x2={x}
                 y2={200}
-                stroke="rgba(255,255,255,0.05)"
+                stroke="rgba(56, 242, 230, 0.08)"
                 strokeDasharray="2 3"
               />
               <text
@@ -80,7 +88,7 @@ export const ProjectConstellation: React.FC<{
         <polyline
           points={pts.map((p) => `${p.x},${p.y}`).join(" ")}
           fill="none"
-          stroke="rgba(56, 242, 230, 0.4)"
+          stroke="rgba(56, 242, 230, 0.5)"
           strokeWidth="1.5"
           strokeDasharray="4 4"
         />
@@ -116,25 +124,25 @@ export const ProjectConstellation: React.FC<{
               <circle
                 cx={pt.x}
                 cy={pt.y}
-                r={isHovered ? pt.r * 2.8 : pt.r * 1.8}
-                fill={isHovered ? "rgba(240,163,94,0.15)" : "rgba(56,242,230,0.08)"}
+                r={isHovered ? pt.r * 3 : pt.r * 2}
+                fill={isHovered ? "rgba(240,163,94,0.22)" : "rgba(56,242,230,0.14)"}
                 className="transition-all duration-300"
               />
               {/* Star Core */}
               <circle
                 cx={pt.x}
                 cy={pt.y}
-                r={isHovered ? pt.r * 1.4 : pt.r}
+                r={isHovered ? pt.r * 1.5 : pt.r}
                 fill={isHovered ? "#f0a35e" : "#38f2e6"}
                 stroke="#0c1018"
                 strokeWidth={1.5}
-                className="transition-all duration-300 shadow-[0_0_12px_rgba(56,242,230,0.8)]"
+                className="transition-all duration-300 shadow-[0_0_16px_rgba(56,242,230,0.9)]"
               />
               <text
                 x={pt.x}
                 y={pt.y - (isHovered ? 14 : 10)}
                 textAnchor="middle"
-                fill={isHovered ? "#ece7dc" : "#8c93a3"}
+                fill={isHovered ? "#ece7dc" : "#a3a8b3"}
                 fontSize="10"
                 fontFamily="var(--font-mono)"
                 className="select-none font-semibold transition-colors duration-200"
@@ -146,8 +154,8 @@ export const ProjectConstellation: React.FC<{
         })}
       </svg>
 
-      {/* Dynamic Hover Legend */}
-      <div className="mt-2 pt-3 border-t border-white/[0.06] flex items-center justify-between font-mono text-xs">
+      {/* Dynamic Hover Legend with Chromatic Callout */}
+      <div className="mt-2 pt-3 border-t border-white/[0.08] flex items-center justify-between font-mono text-xs">
         {hoveredProject ? (
           <div>
             <span className="text-warm font-semibold">{hoveredProject.title}</span>
@@ -155,12 +163,12 @@ export const ProjectConstellation: React.FC<{
             <span className="text-text-secondary">{hoveredProject.tagline}</span>
           </div>
         ) : (
-          <span className="text-text-dim">
-            Hover or click any star to jump to its engineering case study.
+          <span className="text-text-muted">
+            Hover or click any celestial star to inspect that project architecture.
           </span>
         )}
         {hoveredProject && (
-          <span className="text-text-dim shrink-0">
+          <span className="text-accent font-medium shrink-0">
             {hoveredProject.sector} &bull; MAG {hoveredProject.magnitude}
           </span>
         )}
@@ -168,4 +176,3 @@ export const ProjectConstellation: React.FC<{
     </div>
   );
 };
-
