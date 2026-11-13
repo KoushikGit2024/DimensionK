@@ -10,9 +10,7 @@ import { Card } from "@/components/ui/Card";
 import { TelemetryStamp } from "@/components/ui/TelemetryStamp";
 import { buttonStyles } from "@/components/ui/Button";
 import { ObservatoryCursor } from "@/components/visual/ObservatoryCursor";
-import { CodeLensDiagram } from "@/components/diagrams/CodeLensDiagram";
-import { LudoNeoDiagram } from "@/components/diagrams/LudoNeoDiagram";
-import { AlgoVisualsDiagram } from "@/components/diagrams/AlgoVisualsDiagram";
+import { ProjectPreviewWindow } from "@/components/ui/ProjectPreviewWindow";
 import {
   ArrowLeft,
   ArrowRight,
@@ -47,19 +45,6 @@ export async function generateMetadata({
     title: `${project.title} — Observatory Engineering Case Study`,
     description: project.summary,
   };
-}
-
-function ProjectDiagram({ slug }: { slug: string }) {
-  switch (slug) {
-    case "codelens":
-      return <CodeLensDiagram />;
-    case "ludo-neo":
-      return <LudoNeoDiagram />;
-    case "algovisuals":
-      return <AlgoVisualsDiagram />;
-    default:
-      return null;
-  }
 }
 
 async function ProjectContent({ params }: ProjectPageProps) {
@@ -156,13 +141,22 @@ async function ProjectContent({ params }: ProjectPageProps) {
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 my-12">
         {/* Left Column: Narrative Editorial Write-up */}
         <div className="lg:col-span-8 space-y-12">
-          {/* Architecture Diagram */}
+          {/* Real Website Preview / Screenshot Window */}
           <section className="space-y-4">
             <h2 className="font-mono text-xs uppercase tracking-widest text-accent flex items-center gap-2">
               <Compass className="w-4 h-4" />
-              <span>System Blueprint</span>
+              <span>Interactive Interface Inspection</span>
             </h2>
-            <ProjectDiagram slug={project.slug} />
+            <ProjectPreviewWindow
+              title={project.title}
+              tagline={project.tagline}
+              summary={project.summary}
+              technologies={project.technologies}
+              demoUrl={project.links.demo}
+              githubUrl={project.links.github}
+              previewImage={project.previewImage}
+              aspectRatio="wide"
+            />
           </section>
 
           {/* Problem Statement */}

@@ -46,6 +46,7 @@
       "mistakes": "Initially attempted to render the entire 1,400-node SVG graph in a single DOM pass. The browser UI choked at 4 FPS. Replaced it with hierarchical viewport culling, level-of-detail aggregation, and decoupled web workers for force layout simulation.",
       "next": "Adding cross-language support for Rust and Go, and real-time git diff graph overlays to evaluate PR architectural blast radius."
     },
+    "previewImage": "/projects/codelens.png",
     "links": {
       "github": "https://github.com/koushikkar712/CodeLens",
       "demo": null
@@ -97,6 +98,7 @@
       "mistakes": "Initially sent full board snapshots over WebSockets on every micro-turn. This was wasteful and spiked mobile bandwidth. Refactored to delta action payloads with periodic checksums for validation.",
       "next": "Implementing WebRTC data channels for peer-assisted audio chat and distributed lobby matchmaking across regional edge nodes."
     },
+    "previewImage": "/projects/ludo-neo.png",
     "links": {
       "github": "https://github.com/koushikkar712/Ludo-Neo",
       "demo": null
@@ -143,6 +145,7 @@
       "mistakes": "Relying on `setTimeout` loops in initial prototypes. Changing speed mid-flight or pressing pause created race conditions where multiple timers fired simultaneously.",
       "next": "Adding dynamic programming grid matrices and Dijkstra / A* graph traversal pathfinding overlays."
     },
+    "previewImage": "/projects/algovisuals.png",
     "links": {
       "github": "https://github.com/koushikkar712/AlgoVisuals",
       "demo": null
@@ -183,6 +186,7 @@
       "mistakes": "Over-normalizing initial database collections into separate collections for tiny task metadata, leading to avoidable MongoDB aggregation overhead.",
       "next": "Adding collaborative multi-tenant boards and offline-first IndexedDB synchronization with conflict resolution."
     },
+    "previewImage": "/projects/remidos.png",
     "links": {
       "github": "https://github.com/koushikkar712/Remidos",
       "demo": null

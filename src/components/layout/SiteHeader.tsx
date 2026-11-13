@@ -9,7 +9,7 @@ import { Menu, X, Command } from "lucide-react";
 
 const NAV_LINKS = [
   { id: "hero", label: "Horizon", href: "/#hero" },
-  { id: "work", label: "Selected Works", href: "/#work" },
+  { id: "work", label: "Projects", href: "/#work" },
   { id: "capabilities", label: "Capabilities", href: "/#capabilities" },
   { id: "methodology", label: "Methodology", href: "/#methodology" },
   { id: "logbook", label: "Logbook", href: "/#logbook" },

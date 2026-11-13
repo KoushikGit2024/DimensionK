@@ -3,31 +3,13 @@
 import React from "react";
 import { Pillar } from "./pillars";
 import { Card } from "@/components/ui/Card";
-import { AstGraphDemo } from "@/components/demos/AstGraphDemo";
-import { StateSyncDemo } from "@/components/demos/StateSyncDemo";
-import { StepScrubberDemo } from "@/components/demos/StepScrubberDemo";
-import { LogicGateDemo } from "@/components/demos/LogicGateDemo";
+import { Cpu, Terminal, GitBranch, ShieldCheck } from "lucide-react";
 
 interface PillarPanelProps {
   pillar: Pillar;
 }
 
 export const PillarPanel: React.FC<PillarPanelProps> = ({ pillar }) => {
-  const renderInteractiveDemo = (id: string) => {
-    switch (id) {
-      case "ast-determinism":
-        return <AstGraphDemo />;
-      case "realtime-state":
-        return <StateSyncDemo />;
-      case "decoupled-playback":
-        return <StepScrubberDemo />;
-      case "systems-foundation":
-        return <LogicGateDemo />;
-      default:
-        return null;
-    }
-  };
-
   return (
     <Card
       role="tabpanel"
@@ -37,8 +19,9 @@ export const PillarPanel: React.FC<PillarPanelProps> = ({ pillar }) => {
     >
       <div className="space-y-6">
         <div className="flex flex-wrap items-center justify-between gap-2 pb-4 border-b border-white/[0.08] font-mono text-xs">
-          <span className="text-accent uppercase tracking-widest">
-            ARCHITECTURAL SPECIFICATION // {pillar.code}
+          <span className="text-accent uppercase tracking-widest flex items-center gap-2">
+            <Terminal className="w-3.5 h-3.5" />
+            <span>ARCHITECTURAL SPECIFICATION // {pillar.code}</span>
           </span>
           <span className="text-text-muted">
             REF: {pillar.referenceSystem}
@@ -58,14 +41,14 @@ export const PillarPanel: React.FC<PillarPanelProps> = ({ pillar }) => {
           {pillar.summary}
         </p>
 
-        {/* Live Interactive Working Demonstration */}
-        <div className="pt-2">
-          {renderInteractiveDemo(pillar.id)}
-        </div>
-
-        <div className="p-4 rounded-md bg-surface border border-white/[0.08] space-y-2 font-mono">
-          <div className="text-[10px] uppercase tracking-widest text-text-dim">
-            Core System Invariant & Pipeline
+        {/* Engineering Rigor & State Invariant Panel */}
+        <div className="p-5 rounded-lg bg-surface-raised border border-white/[0.08] space-y-3 font-mono">
+          <div className="flex items-center justify-between text-[10px] uppercase tracking-widest text-text-dim border-b border-white/[0.06] pb-2">
+            <span className="flex items-center gap-1.5 text-accent">
+              <ShieldCheck className="w-3.5 h-3.5" />
+              <span>Core Invariant Specification</span>
+            </span>
+            <span>VERIFIED</span>
           </div>
           <div className="text-xs sm:text-sm text-warm font-medium">
             {pillar.invariant}
@@ -94,4 +77,3 @@ export const PillarPanel: React.FC<PillarPanelProps> = ({ pillar }) => {
     </Card>
   );
 };
-

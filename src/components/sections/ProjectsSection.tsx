@@ -7,13 +7,14 @@ import { Container } from "@/components/layout/Container";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { CountUp } from "@/components/ui/CountUp";
 import { ProjectConstellation } from "@/components/visual/ProjectConstellation";
+import { ProjectPreviewWindow } from "@/components/ui/ProjectPreviewWindow";
 import type { Project } from "@/schemas/content";
 
 interface Props {
   projects: Project[];
 }
 
-export const SelectedProjectsSection: React.FC<Props> = ({ projects }) => {
+export const ProjectsSection: React.FC<Props> = ({ projects }) => {
   const [open, setOpen] = useState<string | null>(projects[0]?.slug ?? null);
   const [hovered, setHovered] = useState<string | null>(null);
 
@@ -22,9 +23,9 @@ export const SelectedProjectsSection: React.FC<Props> = ({ projects }) => {
       <Container size="wide">
         <SectionHeading
           index="01"
-          eyebrow="Selected work"
+          eyebrow="Projects"
           title="Things I have built"
-          description="Developer tooling, a real-time multiplayer engine, an algorithm visualizer and a full-stack workspace. Open any row for the details."
+          description="Developer tooling, a real-time multiplayer engine, an algorithm visualizer and a full-stack workspace. Open any row for interactive previews and technical write-ups."
         />
 
         <div className="my-8">
@@ -93,49 +94,78 @@ export const SelectedProjectsSection: React.FC<Props> = ({ projects }) => {
                   }`}
                 >
                   <div className="overflow-hidden">
-                    <div className="grid gap-10 pb-10 pl-12 sm:pl-16 lg:grid-cols-12">
+                    <div className="grid gap-8 pb-12 pt-2 pl-4 sm:pl-12 lg:grid-cols-12 items-start">
+                      {/* Left Side: Real Visual / Live IFrame Preview Window */}
                       <div className="lg:col-span-7">
-                        <p className="text-base sm:text-lg leading-relaxed text-text-secondary">
+                        <ProjectPreviewWindow
+                          title={p.title}
+                          tagline={p.tagline}
+                          summary={p.summary}
+                          technologies={p.technologies}
+                          demoUrl={p.links.demo}
+                          githubUrl={p.links.github}
+                          previewImage={p.previewImage}
+                          aspectRatio="video"
+                        />
+                      </div>
+
+                      {/* Right Side: Editorial Context & Metric Stats */}
+                      <div className="space-y-6 lg:col-span-5">
+                        <p className="text-base sm:text-lg leading-relaxed text-text-secondary font-sans">
                           {p.summary}
                         </p>
+
                         {p.highlights && (
-                          <ul className="mt-6 space-y-3">
-                            {p.highlights.map((h, hi) => (
-                              <li key={hi} className="flex gap-4 text-sm sm:text-base leading-relaxed text-text-secondary">
-                                <span className="font-display text-xl italic leading-none text-warm">{hi + 1}</span>
+                          <ul className="space-y-2.5">
+                            {p.highlights.slice(0, 2).map((h, hi) => (
+                              <li key={hi} className="flex gap-3 text-xs sm:text-sm leading-relaxed text-text-secondary">
+                                <span className="font-display text-lg italic leading-none text-warm">{hi + 1}</span>
                                 <span>{h}</span>
                               </li>
                             ))}
                           </ul>
                         )}
-                      </div>
 
-                      <div className="space-y-8 lg:col-span-5">
                         {p.metrics && (
-                          <dl className="grid grid-cols-3 gap-4">
+                          <dl className="grid grid-cols-3 gap-3 border-t border-b border-white/[0.08] py-4">
                             {Object.entries(p.metrics).map(([k, v]) => (
                               <div key={k} className="flex flex-col-reverse">
-                                <dt className="mt-1 font-mono text-[10px] uppercase tracking-widest text-text-dim">{k}</dt>
-                                <dd className="font-display text-4xl sm:text-5xl tabular-nums text-accent">
+                                <dt className="mt-1 font-mono text-[9px] uppercase tracking-widest text-text-dim">{k}</dt>
+                                <dd className="font-display text-2xl sm:text-3xl tabular-nums text-accent">
                                   <CountUp value={Number(v)} active={isOpen} />
                                 </dd>
                               </div>
                             ))}
                           </dl>
                         )}
-                        <p className="font-mono text-xs leading-relaxed text-text-muted">
-                          {p.technologies.join(" · ")}
-                        </p>
-                        <div className="flex flex-wrap items-center gap-6 font-mono text-xs">
+
+                        <div className="flex flex-wrap items-center gap-2">
+                          {p.technologies.map((tech) => (
+                            <span
+                              key={tech}
+                              className="px-2 py-0.5 rounded bg-surface border border-white/[0.08] font-mono text-[11px] text-text-muted"
+                            >
+                              {tech}
+                            </span>
+                          ))}
+                        </div>
+
+                        <div className="flex flex-wrap items-center gap-6 font-mono text-xs pt-2">
                           {p.links.github && (
-                            <a href={p.links.github} target="_blank" rel="noopener noreferrer"
-                               className="link-draw inline-flex items-center gap-1.5 pb-0.5 text-text-secondary hover:text-text">
-                              <GitBranch className="h-3.5 w-3.5 text-accent" /> Source
+                            <a
+                              href={p.links.github}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="link-draw inline-flex items-center gap-1.5 text-text-secondary hover:text-text"
+                            >
+                              <GitBranch className="h-3.5 w-3.5 text-accent" /> Source Code
                             </a>
                           )}
-                          <Link href={`/projects/${p.slug}`}
-                                className="link-draw inline-flex items-center gap-1 pb-0.5 text-warm">
-                            Case study <ArrowUpRight className="h-3.5 w-3.5" />
+                          <Link
+                            href={`/projects/${p.slug}`}
+                            className="link-draw inline-flex items-center gap-1 text-warm font-semibold"
+                          >
+                            Read Engineering Deep Dive <ArrowUpRight className="h-3.5 w-3.5" />
                           </Link>
                         </div>
                       </div>

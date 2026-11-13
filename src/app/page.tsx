@@ -9,7 +9,7 @@ import { SiteFooter } from "@/components/layout/SiteFooter";
 import { Container } from "@/components/layout/Container";
 import { ScrollReadText } from "@/components/ui/ScrollReadText";
 import { HeroSection } from "@/components/sections/HeroSection";
-import { SelectedProjectsSection } from "@/components/sections/SelectedProjectsSection";
+import { ProjectsSection } from "@/components/sections/ProjectsSection";
 import { CapabilitiesSection } from "@/components/sections/CapabilitiesSection";
 import { MethodologySection } from "@/components/sections/methodology/MethodologySection";
 import { LogbookSection } from "@/components/sections/LogbookSection";
@@ -44,7 +44,7 @@ export default function Home() {
           </section>
         )}
 
-        <SelectedProjectsSection projects={projects} />
+        <ProjectsSection projects={projects} />
         <CapabilitiesSection categories={skills} projects={projects} />
         <MethodologySection />
         <LogbookSection education={education} />

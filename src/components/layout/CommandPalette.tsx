@@ -23,7 +23,7 @@ export const CommandPalette: React.FC = () => {
     () => [
       {
         id: "nav-work",
-        label: "Selected Works & Systems",
+        label: "Projects & Systems",
         category: "Navigation",
         hint: "#work",
         run: () => router.push("/#work"),

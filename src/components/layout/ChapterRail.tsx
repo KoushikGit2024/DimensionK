@@ -5,7 +5,7 @@ import { useActiveSection } from "@/hooks/useActiveSection";
 
 const CHAPTERS = [
   { id: "hero", roman: "O", label: "Horizon" },
-  { id: "work", roman: "I", label: "Selected Works" },
+  { id: "work", roman: "I", label: "Projects" },
   { id: "capabilities", roman: "II", label: "Capabilities" },
   { id: "methodology", roman: "III", label: "Methodology" },
   { id: "logbook", roman: "IV", label: "Logbook" },
