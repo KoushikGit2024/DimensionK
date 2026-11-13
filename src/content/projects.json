@@ -18,6 +18,34 @@
       "Analyzed an extensive repository graph containing 1,468 nodes, 2,760 edges, and 138 detected communities.",
       "Integrated repository-grounded AI documentation with deterministic-first analysis workflows."
     ],
+    "story": {
+      "problem": "Navigating medium-to-large codebases often feels like exploring a dense forest in fog. Developers jump between definitions without a mental model of module dependencies, clustering, or architectural boundaries. Most documentation drifts out of sync immediately because it is manually maintained rather than grounded in actual AST syntax trees.",
+      "constraints": [
+        "Must run entirely deterministically without hallucinating fake imports or phantom dependencies.",
+        "Must scale to parse thousands of files and resolve barrel files, circular references, and dynamic exports in sub-second timelines.",
+        "Must preserve memory efficiency while computing complex Louvain or modularity-based community detection on node clusters."
+      ],
+      "decisions": [
+        {
+          "title": "Deterministic AST Parser over Regex / Heuristics",
+          "why": "Regex cannot resolve nested scope closures, aliased re-exports, or syntax edge cases. A deterministic Babel/TypeScript parser provides unambiguous dependency graphs.",
+          "tradeoff": "Higher initial parse CPU cost compared to naive string scanning, requiring caching and incremental file diffing."
+        },
+        {
+          "title": "Graph Partitioning with Modularity Detection",
+          "why": "Flat 2,000-node graphs produce incomprehensible hairballs. Community clustering groups related functional modules into digestible architectural islands.",
+          "tradeoff": "Non-trivial computational complexity requiring adjacency matrix optimizations."
+        },
+        {
+          "title": "Grounded AI Context Generation",
+          "why": "LLM summaries are only trustworthy when fed explicit AST-proven topological order rather than random snippets.",
+          "tradeoff": "Prompt length budgets require careful extraction of interface definitions and call edges rather than full method bodies."
+        }
+      ],
+      "hardest": "Handling cyclic dependencies and tangled barrel exports without causing infinite recursion in graph traversals or blowing up memory during community clustering.",
+      "mistakes": "Initially attempted to render the entire 1,400-node SVG graph in a single DOM pass. The browser UI choked at 4 FPS. Replaced it with hierarchical viewport culling, level-of-detail aggregation, and decoupled web workers for force layout simulation.",
+      "next": "Adding cross-language support for Rust and Go, and real-time git diff graph overlays to evaluate PR architectural blast radius."
+    },
     "links": {
       "github": "https://github.com/koushikkar712/CodeLens",
       "demo": null
@@ -41,6 +69,34 @@
       "Implemented automated matchmaking and algorithmic bot fallbacks for low-latency lobbies.",
       "Integrated Redis and RedisJSON for atomic game-state storage, retrieval, and session recovery."
     ],
+    "story": {
+      "problem": "Multiplayer board games require authoritative rule enforcement, sub-second turn propagation, and seamless reconnection handling. When players disconnect on unstable mobile networks, games shouldn't freeze, desynchronize, or leave the table in an orphaned, corrupted state.",
+      "constraints": [
+        "Zero trust in client input: all dice rolls, collision validations, and token movements must be strictly validated on the authoritative server.",
+        "Seamless session recovery: reconnecting players must restore the board state down to the remaining turn timer without stalling opponents.",
+        "Sub-100ms message roundtrip latency even under concurrent room load."
+      ],
+      "decisions": [
+        {
+          "title": "Authoritative Server State Machine with RedisJSON",
+          "why": "Storing state in memory on a single process prevents horizontal scaling. RedisJSON allows atomic state mutations and sub-millisecond read/write operations with persistent durability.",
+          "tradeoff": "Requires strict synchronization protocols and JSON serializable state machines."
+        },
+        {
+          "title": "Algorithmic Bot Fallback on Disconnection",
+          "why": "Nothing ruins a four-player game faster than one disconnected user causing the match to freeze indefinitely.",
+          "tradeoff": "Designing heuristic decision rules for bots that feel fair and competitive without appearing clairvoyant or punishing."
+        },
+        {
+          "title": "Socket.IO Ack-based Event Acknowledgement",
+          "why": "Packet loss or temporary signal dropouts could skip turn notifications. Explicit acknowledgement cycles ensure state synchronization.",
+          "tradeoff": "Introduces state machine queues to buffer out-of-order player actions."
+        }
+      ],
+      "hardest": "Race conditions between player disconnection timers, automated turn timeouts, and reconnect handshakes arriving at the exact millisecond a bot was being assigned.",
+      "mistakes": "Initially sent full board snapshots over WebSockets on every micro-turn. This was wasteful and spiked mobile bandwidth. Refactored to delta action payloads with periodic checksums for validation.",
+      "next": "Implementing WebRTC data channels for peer-assisted audio chat and distributed lobby matchmaking across regional edge nodes."
+    },
     "links": {
       "github": "https://github.com/koushikkar712/Ludo-Neo",
       "demo": null
@@ -64,6 +120,29 @@
       "Decoupled pure algorithm execution steps from UI animation loops for deterministic frame playback.",
       "Engineered modular React components representing complex intermediate data structure states."
     ],
+    "story": {
+      "problem": "Algorithms are taught with static pseudocode and chalkboard diagrams, leaving students to mentally animate pointer swaps and call stacks. Most interactive visualizers are tightly coupled to timer timeouts, making pause, rewind, step-by-step scrutiny, or speed alterations jerky and error-prone.",
+      "constraints": [
+        "True step-scrubbing: user must be able to drag a scrubber to frame 42 or jump backwards without recalculating UI glitches.",
+        "Pure separation between algorithmic execution logic and React render cycles.",
+        "Smooth, predictable visual transitions without relying on heavyweight animation libraries."
+      ],
+      "decisions": [
+        {
+          "title": "Generator / Snapshot History Pattern",
+          "why": "Running the algorithm eagerly produces an immutable timeline of state snapshots `[State_0, State_1, ... State_N]`. Scrubbing simply indexes into the array.",
+          "tradeoff": "Higher initial memory for algorithms with hundreds of intermediate operations, requiring snapshot compaction for large arrays."
+        },
+        {
+          "title": "Declarative Color and Height State Mapping",
+          "why": "Decoupling visual styling (active comparison, pivot, sorted partition) from layout prevents layout thrashing during sorting animations.",
+          "tradeoff": "Requires strict synchronization between array indexes and visual key identifiers."
+        }
+      ],
+      "hardest": "Representing tree balance operations (like AVL rotations and recursive tree traversals) cleanly in 2D space without node overlaps during intermediate rebalancing states.",
+      "mistakes": "Relying on `setTimeout` loops in initial prototypes. Changing speed mid-flight or pressing pause created race conditions where multiple timers fired simultaneously.",
+      "next": "Adding dynamic programming grid matrices and Dijkstra / A* graph traversal pathfinding overlays."
+    },
     "links": {
       "github": "https://github.com/koushikkar712/AlgoVisuals",
       "demo": null
@@ -87,6 +166,23 @@
       "Engineered schema models in MongoDB Atlas for persistent cloud data storage.",
       "Configured automated deployment pipelines on Render."
     ],
+    "story": {
+      "problem": "Most lightweight task trackers either lack real backend persistence or suffer from slow, un-optimistic UI updates where every checkbox toggle blocks on a network roundtrip.",
+      "constraints": [
+        "Seamless cloud sync across devices using MongoDB Atlas.",
+        "Clean REST API contracts with robust error boundary fallbacks."
+      ],
+      "decisions": [
+        {
+          "title": "Optimistic UI Mutations",
+          "why": "Checkboxes and status toggles update immediately on the client, syncing with Express in the background and rolling back on network failure.",
+          "tradeoff": "Requires rollback state buffering in client-side state stores."
+        }
+      ],
+      "hardest": "Structuring database indexes and schema validation rules to prevent orphan tasks when parent categorization tags are deleted.",
+      "mistakes": "Over-normalizing initial database collections into separate collections for tiny task metadata, leading to avoidable MongoDB aggregation overhead.",
+      "next": "Adding collaborative multi-tenant boards and offline-first IndexedDB synchronization with conflict resolution."
+    },
     "links": {
       "github": "https://github.com/koushikkar712/Remidos",
       "demo": null
@@ -97,4 +193,3 @@
     }
   }
 ]
-

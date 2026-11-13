@@ -19,6 +19,21 @@ export const ObservatoryCoordinatesSchema = z.object({
   magnitude: z.string(),
 });
 
+export const ProjectStoryDecisionSchema = z.object({
+  title: z.string(),
+  why: z.string(),
+  tradeoff: z.string().optional(),
+});
+
+export const ProjectStorySchema = z.object({
+  problem: z.string(),
+  constraints: z.array(z.string()),
+  decisions: z.array(ProjectStoryDecisionSchema),
+  hardest: z.string(),
+  mistakes: z.string().optional(),
+  next: z.string().optional(),
+});
+
 export const ProjectSchema = z.object({
   slug: z.string().min(1),
   title: z.string().min(1),
@@ -37,6 +52,7 @@ export const ProjectSchema = z.object({
   metrics: z.record(z.string(), z.union([z.string(), z.number()])).optional(),
   technologies: z.array(z.string()).min(1),
   highlights: z.array(z.string()).optional(),
+  story: ProjectStorySchema.optional(),
   links: z.object({
     github: z.string().url().nullable().optional(),
     demo: z.string().url().nullable().optional(),
