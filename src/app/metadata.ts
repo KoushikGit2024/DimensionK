@@ -11,7 +11,7 @@ export async function generateMetadata(): Promise<Metadata> {
       template: `%s | ${profile.displayName}`,
     },
     description: profile.summary,
-    authors: [{ name: profile.displayName, url: "https://github.com/koushikkar712" }],
+    authors: [{ name: profile.displayName, url: "https://github.com/KoushikGit2024" }],
     creator: profile.displayName,
     keywords: [
       "Koushik Kar",

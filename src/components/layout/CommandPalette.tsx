@@ -82,7 +82,7 @@ export const CommandPalette: React.FC = () => {
         label: "Open GitHub Profile",
         category: "Action",
         hint: "external",
-        run: () => window.open("https://github.com/koushikkar712", "_blank"),
+        run: () => window.open("https://github.com/KoushikGit2024", "_blank"),
       },
     ],
     [router]
